@@ -36,13 +36,16 @@ browser; the rest are server-only and must stay that way.
 | `npm run build` | Production build |
 | `npm start` | Serve the production build |
 | `npm run lint` | ESLint |
+| `npm test` | Unit + schema tests (real Postgres via PGlite) |
+| `npm run seed:generate` | Rebuild `supabase/seed.sql` from `seed/org.json` |
 | `npx tsc --noEmit` | Typecheck |
 
 ## Progress
 
 - [x] **M1** — Project skeleton
 - [ ] **M2** — Supabase auth and the protected shell
-- [ ] **M3** — People and departments
+- [~] **M3** — Campuses, people, positions *(schema + seed written and tested; not yet applied to a live Supabase project)*
+- [ ] **M3b** — Campus switcher
 - [ ] **M4** — The org chart (read-only)
 - [ ] **M5** — Editing the org chart
 - [ ] **M6** — Task data and the Task Directory

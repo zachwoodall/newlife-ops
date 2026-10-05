@@ -59,10 +59,11 @@ Worth knowing these aren't mistakes in the data — they're what the chart says:
 
 ## Open items
 
-**Needed before Milestone 3 can finish**
+**Emails**
 
-- **Email addresses for all 15 people.** They're the login identity — nobody can
-  sign in without one.
+- Only `zach@newlifecanton.com` is on file. `people.email` is nullable, so the
+  other 14 exist in the chart and the org tree without logins; each gets access
+  when their address is added. Not a blocker for anything but their own sign-in.
 
 **Worth confirming (transcribed exactly as printed)**
 

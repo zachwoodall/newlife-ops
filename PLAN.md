@@ -94,7 +94,8 @@ edit what they're allowed to edit.
 
 Seed from [seed/org.json](seed/org.json), which already holds both charts.
 
-> **Still needed: staff email addresses.** Everything else is captured.
+Email is nullable, so staff exist in the chart before they have a login. Only
+Zach has one so far; the rest get added as they arrive.
 
 **Verify:** Home greets you by your real name from the database. Querying your
 position returns the right supervisor and direct reports. Open positions show as
@@ -260,9 +261,9 @@ the rest gets built.
 Answered so far: your departments and who's in them, the Senior Pastor sitting
 above the Executive Pastor, and the campus-lead assignment rule. Still open:
 
-1. **Email addresses for all 15 staff.** This is the one blocker left for
-   Milestone 3 — email is the login identity, so nobody can sign in without it.
-   A plain list of name → email is all I need.
+1. **Email addresses for the other 14 staff.** Not blocking — email is
+   nullable, so everyone is already in the chart and logins get added as the
+   addresses arrive. Needed before each person can actually sign in.
 
 2. **How should staff sign in — password or emailed login link?** Login links
    mean no passwords to reset, usually right for a small staff. Passwords are
