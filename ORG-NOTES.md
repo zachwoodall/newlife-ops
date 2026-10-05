@@ -88,3 +88,12 @@ Worth knowing these aren't mistakes in the data — they're what the chart says:
   position; the rule is scoped to that campus, so it grants nothing at the other
   campus and never reaches upward. Logic in [src/lib/org.ts](src/lib/org.ts),
   covered by tests in `src/lib/org.test.ts`.
+
+
+## Security
+
+Migration `0002_rls.sql` turns on Row Level Security for all four tables.
+Without it the anon key — which ships inside every browser that loads the app —
+could read and write every staff record. Signed-in staff can read the org;
+nobody can write until the editable chart arrives in Milestone 5. Covered by
+`src/lib/rls.test.ts`, which asserts the lock rather than assuming it.
