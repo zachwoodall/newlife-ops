@@ -52,9 +52,9 @@ browser; the rest are server-only and must stay that way.
 
 - [x] **M1** — Project skeleton
 - [x] **M2** — Supabase auth and the protected shell
-- [~] **M3** — Campuses, people, positions *(schema + seed written and tested; not yet applied to a live Supabase project)*
-- [ ] **M3b** — Campus switcher
-- [ ] **M4** — The org chart (read-only)
+- [x] **M3** — Campuses, people, positions *(applied to the live project)*
+- [x] **M3b** — Campus switcher
+- [x] **M4** — The org chart (read-only)
 - [ ] **M5** — Editing the org chart
 - [ ] **M6** — Task data and the Task Directory
 - [ ] **M7** — Home's top 5
