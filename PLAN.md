@@ -5,6 +5,10 @@ ownership. Scope is fixed to the three pages described below. Nothing else.
 
 **Stack:** Next.js (App Router) + Tailwind · Supabase (auth + Postgres + RLS) · ImageKit (all media)
 
+**Brand:** Primary blue `#175B9D`, white, black. Core values: Worship · Word ·
+Walk · Witness. Palette is wired into Tailwind as `brand-50` through
+`brand-900`; see [src/app/globals.css](src/app/globals.css).
+
 ---
 
 ## The three pages
@@ -64,25 +68,45 @@ placeholder pages behind each.
 all three pages. Sign out returns you to login. Visiting any page while signed
 out bounces you to login.
 
-### Milestone 3 — People and departments
+### Milestone 3 — Campuses, people, and positions
 
-The data backbone. Three things in the database:
+The data backbone. Your two org charts changed the shape of this milestone —
+details and reasoning in [ORG-NOTES.md](ORG-NOTES.md). Four tables:
 
-- `departments` — name, and optionally a parent department
-- `profiles` — one row per staff member, linked to their login: full name, email,
-  job title, which department they're in, and **who their supervisor is**
-- Row-level security so a signed-in user can read the staff directory but can
-  only edit what they're allowed to edit
+- `campuses` — Holly Springs and Union Hill
+- `people` — one row per human: name, email, login link. 15 of them.
+- `positions` — one row per *role*: title, department, campus, and which
+  position it reports to. 22 of them, 6 currently unfilled.
+- `position_holders` — which people hold which positions
 
-Then seed it with your real departments and staff, with the executive pastor as
-supervisor for each major department head.
+**Positions are separate from people**, because your charts need three things a
+single staff table can't do: hold open roles with nobody in them, put two people
+in one box (Zach & Sarah Woodall, John Booth & Josh Floyd), and let one person
+hold roles at both campuses (Zach, John Booth, Charlie Shultz all do).
 
-> **I need your department list and staff names to do this milestone.**
+Row-level security so a signed-in user can read the staff directory but can only
+edit what they're allowed to edit.
 
-**Verify:** Home greets you by your real name, pulled from the database. A
-query returns your supervisor and your direct reports correctly.
+Seed from [seed/org.json](seed/org.json), which already holds both charts.
 
----
+> **Still needed: staff email addresses.** Everything else is captured.
+
+**Verify:** Home greets you by your real name from the database. Querying your
+position returns the right supervisor and direct reports. Open positions show as
+unfilled rather than vanishing.
+
+### Milestone 3b — Campus switcher
+
+People who hold positions at both campuses get a campus toggle in the app
+header. Switching changes which campus's org chart and tasks you see. People at
+one campus never see the toggle — it just isn't there for them.
+
+Your selected campus persists across page loads, so you don't re-pick it every
+visit.
+
+**Verify:** Sign in as Zach (positions at both campuses) and see the toggle;
+switch and watch the department view change. Sign in as Brandon Ford (Holly
+Springs only) and confirm no toggle appears.
 
 ## Phase 2 — My Department
 
@@ -228,19 +252,37 @@ the rest gets built.
 
 ## Questions
 
-1. **What are your departments, and who's in them?** Milestone 3 is blocked
-   without this. I need department names, each person's name, email, and job
-   title, and who reports to whom. A rough list is fine — I'll shape it.
+Answered by the org charts: your departments, who's in them, and the fact that
+the Senior Pastor sits above the Executive Pastor. Still open:
 
-2. **How should staff sign in — password or emailed login link?** Login links
-   mean no passwords to reset, which is usually the right call for a small staff.
-   Passwords are more familiar. Your call.
+1. **Email addresses for all 15 staff.** This is the one blocker left for
+   Milestone 3 — email is the login identity, so nobody can sign in without it.
+   A plain list of name → email is all I need.
 
-3. **Besides the executive pastor, is anyone above a department head?** The plan
-   assumes exec pastor sits above the major departments. If there's a lead pastor
-   above that, the chart handles it — I just need to know.
+2. **Can the Union Hill Campus Pastor assign tasks to Union Hill department
+   directors?** By the chart they report to their Holly Springs department head,
+   so the downward-only rule would block it — Zach as Campus Pastor couldn't
+   assign anything to the Union Hill Worship Director. That seems wrong in
+   practice. I'd suggest campus pastors can also assign to anyone at their
+   campus. Your call, and it's a one-line rule change either way.
 
-4. **Can a department head see tasks belonging to their whole team, or only
-   their own?** Your description says the Task Directory shows what *you*
-   personally own. I'll build exactly that unless supervisors should also see
-   their team's work.
+3. **How should staff sign in — password or emailed login link?** Login links
+   mean no passwords to reset, usually right for a small staff. Passwords are
+   more familiar.
+
+4. **Can a department head see their whole team's tasks, or only their own?**
+   Your description says the Task Directory shows what *you* personally own. I'll
+   build exactly that unless supervisors should also see their team's work.
+
+5. **Fonts.** The brand kit specifies CMG Sans, which is a licensed font and not
+   available for web use. I'd suggest Poppins or Jost — both free, both
+   geometric, both close to the Century Gothic feel of the logo. Currently the
+   app still uses the Next.js default. One-line swap once you pick.
+
+6. **Logo files.** I can see both logo variations in the brand kit PDF but can't
+   pull them out cleanly. If you can export the wordmark and the cross mark as
+   **SVG** (or PNG with transparency), they'll go in the app header.
+
+7. **Pantone 2945 C hex was cut off** in the brand kit — it reads "#668". I used
+   Pantone's published `#00549F`. Confirm against your print assets if it
+   matters.
