@@ -31,6 +31,8 @@ export default async function DepartmentPage() {
   const here = positionsOf(org, me).filter((p) => p.campus === selected);
   const campusName =
     org.campuses.find((c) => c.key === selected)?.name ?? selected;
+  const primaryCampusName =
+    org.campuses.find((c) => c.is_primary)?.name ?? "the main campus";
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
@@ -57,6 +59,16 @@ export default async function DepartmentPage() {
           ? (org.positions.find((p) => p.key === position.reports_to) ?? null)
           : null;
         const reports = directReports(org, position.key);
+        // A campus lead oversees everyone at their campus, including roles
+        // whose reporting line runs to the other campus.
+        const oversight = position.campus_lead
+          ? org.positions.filter(
+              (p) =>
+                p.campus === position.campus &&
+                p.key !== position.key &&
+                !reports.some((r) => r.key === p.key),
+            )
+          : [];
 
         return (
           <section key={position.key} className="mt-10">
@@ -71,7 +83,7 @@ export default async function DepartmentPage() {
                 </p>
                 {supervisor ? (
                   <div className="max-w-xs">
-                    <PositionCard org={org} position={supervisor} tone="muted" />
+                    <PositionCard org={org} position={supervisor} tone="muted" viewingCampus={selected} />
                   </div>
                 ) : (
                   <p className="text-muted text-sm italic">
@@ -85,7 +97,7 @@ export default async function DepartmentPage() {
                   You
                 </p>
                 <div className="max-w-xs">
-                  <PositionCard org={org} position={position} tone="self" />
+                  <PositionCard org={org} position={position} tone="self" viewingCampus={selected} />
                 </div>
               </div>
 
@@ -100,11 +112,40 @@ export default async function DepartmentPage() {
                 ) : (
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {reports.map((r) => (
-                      <PositionCard key={r.key} org={org} position={r} />
+                      <PositionCard key={r.key} org={org} position={r} viewingCampus={selected} />
                     ))}
                   </div>
                 )}
               </div>
+
+              {position.campus_lead && (
+                <div>
+                  <p className="text-muted mb-2 text-xs tracking-wider uppercase">
+                    Also at this campus ({oversight.length})
+                  </p>
+                  <p className="text-muted mb-3 text-sm">
+                    These roles report to their {primaryCampusName} department
+                    head, but work at {campusName} under you. You can assign
+                    them tasks.
+                  </p>
+                  {oversight.length === 0 ? (
+                    <p className="text-muted text-sm italic">
+                      No other roles at this campus.
+                    </p>
+                  ) : (
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {oversight.map((r) => (
+                        <PositionCard
+                          key={r.key}
+                          org={org}
+                          position={r}
+                          viewingCampus={selected}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </section>
         );

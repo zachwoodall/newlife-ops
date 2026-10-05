@@ -4,10 +4,13 @@ export function PositionCard({
   org,
   position,
   tone = "normal",
+  /** Campus currently being viewed — a card from elsewhere gets labelled. */
+  viewingCampus,
 }: {
   org: OrgData;
   position: Position;
   tone?: "normal" | "self" | "muted";
+  viewingCampus?: string;
 }) {
   const names = position.holders
     .map((k) => org.people.find((p) => p.key === k)?.full_name)
@@ -15,10 +18,12 @@ export function PositionCard({
 
   const open = names.length === 0;
 
+  const elsewhere =
+    viewingCampus !== undefined && position.campus !== viewingCampus;
+  const campusName = org.campuses.find((c) => c.key === position.campus)?.name;
+
   const ring =
-    tone === "self"
-      ? "border-brand-500 ring-brand-500/20 ring-2"
-      : "border-border";
+    tone === "self" ? "border-brand-500 ring-brand-500/20 ring-2" : "border-border";
 
   return (
     <div className={`bg-surface rounded-lg border ${ring} overflow-hidden`}>
@@ -46,7 +51,14 @@ export function PositionCard({
         ) : (
           <p className="text-sm font-medium">{names.join(" & ")}</p>
         )}
-        <p className="text-muted mt-0.5 text-xs">{position.department}</p>
+        <p className="text-muted mt-0.5 text-xs">
+          {position.department}
+          {elsewhere && campusName && (
+            <span className="border-border text-muted ml-1.5 rounded border px-1 py-0.5 text-[10px] tracking-wide uppercase">
+              {campusName}
+            </span>
+          )}
+        </p>
       </div>
     </div>
   );
