@@ -17,6 +17,14 @@ npm run dev
 
 Then open http://localhost:3000.
 
+## First-time setup
+
+1. Copy `.env.local.example` to `.env.local` and fill in the Supabase values.
+2. In the Supabase SQL Editor, run `supabase/migrations/0001_org_structure.sql`,
+   then `supabase/seed.sql`.
+3. Create your user in the Supabase dashboard under **Authentication → Users →
+   Add user**, with *Auto Confirm User* checked.
+
 ## Environment variables
 
 Copy `.env.local.example` to `.env.local` and fill in real values:
@@ -43,7 +51,7 @@ browser; the rest are server-only and must stay that way.
 ## Progress
 
 - [x] **M1** — Project skeleton
-- [ ] **M2** — Supabase auth and the protected shell
+- [x] **M2** — Supabase auth and the protected shell
 - [~] **M3** — Campuses, people, positions *(schema + seed written and tested; not yet applied to a live Supabase project)*
 - [ ] **M3b** — Campus switcher
 - [ ] **M4** — The org chart (read-only)
