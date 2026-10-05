@@ -29,6 +29,11 @@ that don't need a full board.
 
 - **Tasks flow downward only.** You can assign a task to anyone below you in the
   org chart. Never to anyone above you.
+- **Campus leads are the exception.** A campus pastor can also assign to anyone
+  at their campus, across reporting lines — Union Hill directors report to Holly
+  Springs department heads, so without this the campus pastor couldn't assign to
+  their own staff. Confirmed 2026-10-05. Encoded and tested in
+  [src/lib/org.ts](src/lib/org.ts).
 - **Messages go anywhere.** Any staff member can message any other staff member.
 
 ---
@@ -252,37 +257,30 @@ the rest gets built.
 
 ## Questions
 
-Answered by the org charts: your departments, who's in them, and the fact that
-the Senior Pastor sits above the Executive Pastor. Still open:
+Answered so far: your departments and who's in them, the Senior Pastor sitting
+above the Executive Pastor, and the campus-lead assignment rule. Still open:
 
 1. **Email addresses for all 15 staff.** This is the one blocker left for
    Milestone 3 — email is the login identity, so nobody can sign in without it.
    A plain list of name → email is all I need.
 
-2. **Can the Union Hill Campus Pastor assign tasks to Union Hill department
-   directors?** By the chart they report to their Holly Springs department head,
-   so the downward-only rule would block it — Zach as Campus Pastor couldn't
-   assign anything to the Union Hill Worship Director. That seems wrong in
-   practice. I'd suggest campus pastors can also assign to anyone at their
-   campus. Your call, and it's a one-line rule change either way.
-
-3. **How should staff sign in — password or emailed login link?** Login links
+2. **How should staff sign in — password or emailed login link?** Login links
    mean no passwords to reset, usually right for a small staff. Passwords are
    more familiar.
 
-4. **Can a department head see their whole team's tasks, or only their own?**
+3. **Can a department head see their whole team's tasks, or only their own?**
    Your description says the Task Directory shows what *you* personally own. I'll
    build exactly that unless supervisors should also see their team's work.
 
-5. **Fonts.** The brand kit specifies CMG Sans, which is a licensed font and not
+4. **Fonts.** The brand kit specifies CMG Sans, which is a licensed font and not
    available for web use. I'd suggest Poppins or Jost — both free, both
    geometric, both close to the Century Gothic feel of the logo. Currently the
    app still uses the Next.js default. One-line swap once you pick.
 
-6. **Logo files.** I can see both logo variations in the brand kit PDF but can't
+5. **Logo files.** I can see both logo variations in the brand kit PDF but can't
    pull them out cleanly. If you can export the wordmark and the cross mark as
    **SVG** (or PNG with transparency), they'll go in the app header.
 
-7. **Pantone 2945 C hex was cut off** in the brand kit — it reads "#668". I used
+6. **Pantone 2945 C hex was cut off** in the brand kit — it reads "#668". I used
    Pantone's published `#00549F`. Confirm against your print assets if it
    matters.

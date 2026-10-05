@@ -1,62 +1,326 @@
 {
   "_source": "New Life Staff Org Chart Holly Springs.pdf, New Life Union Hill Org Chart.pdf",
-  "_status": "AWAITING REVIEW — emails missing, see open_questions at bottom",
-
+  "_status": "AWAITING REVIEW \u2014 emails missing, see open_questions at bottom",
   "campuses": [
-    { "key": "holly-springs", "name": "Holly Springs", "is_primary": true },
-    { "key": "union-hill", "name": "Union Hill", "is_primary": false }
+    {
+      "key": "holly-springs",
+      "name": "Holly Springs",
+      "is_primary": true
+    },
+    {
+      "key": "union-hill",
+      "name": "Union Hill",
+      "is_primary": false
+    }
   ],
-
   "people": [
-    { "key": "allan-malloy",    "full_name": "Dr. Allan Malloy", "email": null },
-    { "key": "jb-kitts",        "full_name": "JB Kitts",         "email": null },
-    { "key": "thomas-davis",    "full_name": "Thomas Davis",     "email": null },
-    { "key": "roumar-bromfield","full_name": "Roumar Bromfield", "email": null },
-    { "key": "zach-woodall",    "full_name": "Zach Woodall",     "email": "zach@newlifecanton.com" },
-    { "key": "sarah-woodall",   "full_name": "Sarah Woodall",    "email": null },
-    { "key": "levi-porter",     "full_name": "Levi Porter",      "email": null },
-    { "key": "vannessa-smith",  "full_name": "Vannessa Smith",   "email": null },
-    { "key": "anna",            "full_name": "Anna",             "email": null, "_note": "last name not on chart" },
-    { "key": "john-booth",      "full_name": "John Booth",       "email": null },
-    { "key": "josh-floyd",      "full_name": "Josh Floyd",       "email": null },
-    { "key": "brandon-ford",    "full_name": "Brandon Ford",     "email": null },
-    { "key": "shelby-koerner",  "full_name": "Shelby Koerner",   "email": null },
-    { "key": "charlie-shultz",  "full_name": "Charlie Shultz",   "email": null },
-    { "key": "kathy-malloy",    "full_name": "Kathy Malloy",     "email": null }
+    {
+      "key": "allan-malloy",
+      "full_name": "Dr. Allan Malloy",
+      "email": null
+    },
+    {
+      "key": "jb-kitts",
+      "full_name": "JB Kitts",
+      "email": null
+    },
+    {
+      "key": "thomas-davis",
+      "full_name": "Thomas Davis",
+      "email": null
+    },
+    {
+      "key": "roumar-bromfield",
+      "full_name": "Roumar Bromfield",
+      "email": null
+    },
+    {
+      "key": "zach-woodall",
+      "full_name": "Zach Woodall",
+      "email": "zach@newlifecanton.com"
+    },
+    {
+      "key": "sarah-woodall",
+      "full_name": "Sarah Woodall",
+      "email": null
+    },
+    {
+      "key": "levi-porter",
+      "full_name": "Levi Porter",
+      "email": null
+    },
+    {
+      "key": "vannessa-smith",
+      "full_name": "Vannessa Smith",
+      "email": null
+    },
+    {
+      "key": "anna",
+      "full_name": "Anna",
+      "email": null,
+      "_note": "last name not on chart"
+    },
+    {
+      "key": "john-booth",
+      "full_name": "John Booth",
+      "email": null
+    },
+    {
+      "key": "josh-floyd",
+      "full_name": "Josh Floyd",
+      "email": null
+    },
+    {
+      "key": "brandon-ford",
+      "full_name": "Brandon Ford",
+      "email": null
+    },
+    {
+      "key": "shelby-koerner",
+      "full_name": "Shelby Koerner",
+      "email": null
+    },
+    {
+      "key": "charlie-shultz",
+      "full_name": "Charlie Shultz",
+      "email": null
+    },
+    {
+      "key": "kathy-malloy",
+      "full_name": "Kathy Malloy",
+      "email": null
+    }
   ],
-
   "positions": [
-    { "key": "hs-senior-pastor", "title": "Senior Pastor", "department": "Leadership", "campus": "holly-springs", "reports_to": null, "holders": ["allan-malloy"] },
-    { "key": "hs-executive-pastor", "title": "Executive Pastor", "department": "Leadership", "campus": "holly-springs", "reports_to": "hs-senior-pastor", "holders": ["jb-kitts"] },
-
-    { "key": "hs-worship", "title": "Worship", "department": "Worship", "campus": "holly-springs", "reports_to": "hs-executive-pastor", "holders": ["thomas-davis"] },
-    { "key": "hs-music-director", "title": "Music Director", "department": "Worship", "campus": "holly-springs", "reports_to": "hs-worship", "holders": ["roumar-bromfield"] },
-
-    { "key": "hs-students", "title": "Students", "department": "Students", "campus": "holly-springs", "reports_to": "hs-executive-pastor", "holders": ["zach-woodall", "sarah-woodall"] },
-    { "key": "hs-students-intern", "title": "Intern", "department": "Students", "campus": "holly-springs", "reports_to": "hs-students", "holders": ["levi-porter"] },
-
-    { "key": "hs-kids", "title": "Kids", "department": "Kids", "campus": "holly-springs", "reports_to": "hs-executive-pastor", "holders": ["vannessa-smith"] },
-    { "key": "hs-kids-intern", "title": "Intern", "department": "Kids", "campus": "holly-springs", "reports_to": "hs-kids", "holders": ["anna"] },
-
-    { "key": "hs-production", "title": "Production", "department": "Production", "campus": "holly-springs", "reports_to": "hs-executive-pastor", "holders": ["john-booth", "josh-floyd"] },
-    { "key": "hs-pastoral-care", "title": "Pastoral Care", "department": "Pastoral Care", "campus": "holly-springs", "reports_to": "hs-executive-pastor", "holders": ["brandon-ford"] },
-    { "key": "hs-administrative", "title": "Administrative", "department": "Administrative", "campus": "holly-springs", "reports_to": "hs-executive-pastor", "holders": ["shelby-koerner"] },
-    { "key": "hs-facilities", "title": "Facilities", "department": "Facilities", "campus": "holly-springs", "reports_to": "hs-executive-pastor", "holders": ["charlie-shultz"] },
-    { "key": "hs-small-groups", "title": "Small Groups", "department": "Small Groups", "campus": "holly-springs", "reports_to": "hs-executive-pastor", "holders": ["kathy-malloy"] },
-
-    { "key": "uh-campus-pastor", "title": "Campus Pastor", "department": "Leadership", "campus": "union-hill", "reports_to": "hs-executive-pastor", "holders": ["zach-woodall"] },
-    { "key": "uh-campus-coordinator", "title": "Campus Coordinator", "department": "Leadership", "campus": "union-hill", "reports_to": "uh-campus-pastor", "holders": [] },
-
-    { "key": "uh-worship-director", "title": "Worship Director", "department": "Worship", "campus": "union-hill", "reports_to": "hs-worship", "campus_oversight": "uh-campus-pastor", "holders": [] },
-    { "key": "uh-kids-director", "title": "Kids Director", "department": "Kids", "campus": "union-hill", "reports_to": "hs-kids", "campus_oversight": "uh-campus-pastor", "holders": [] },
-    { "key": "uh-student-director", "title": "Student Director", "department": "Students", "campus": "union-hill", "reports_to": "hs-students", "campus_oversight": "uh-campus-pastor", "holders": [] },
-    { "key": "uh-production-director", "title": "Production Director", "department": "Production", "campus": "union-hill", "reports_to": "hs-worship", "campus_oversight": "uh-campus-pastor", "holders": ["john-booth"], "_note": "reports to Thomas Davis (Worship), not Holly Springs Production" },
-    { "key": "uh-small-groups-director", "title": "Small Groups Director", "department": "Small Groups", "campus": "union-hill", "reports_to": "hs-small-groups", "campus_oversight": "uh-campus-pastor", "holders": [] },
-    { "key": "uh-next-steps-director", "title": "Next Steps Director", "department": "Next Steps", "campus": "union-hill", "reports_to": null, "campus_oversight": "uh-campus-pastor", "holders": [], "_note": "chart says REPORTS TO: Unassigned" },
-    { "key": "uh-facilities-director", "title": "Facilities Director", "department": "Facilities", "campus": "union-hill", "reports_to": "hs-executive-pastor", "campus_oversight": "uh-campus-pastor", "holders": ["charlie-shultz"], "_note": "reports to JB Kitts directly, not Holly Springs Facilities" }
+    {
+      "key": "hs-senior-pastor",
+      "title": "Senior Pastor",
+      "department": "Leadership",
+      "campus": "holly-springs",
+      "reports_to": null,
+      "holders": [
+        "allan-malloy"
+      ]
+    },
+    {
+      "key": "hs-executive-pastor",
+      "title": "Executive Pastor",
+      "department": "Leadership",
+      "campus": "holly-springs",
+      "reports_to": "hs-senior-pastor",
+      "holders": [
+        "jb-kitts"
+      ]
+    },
+    {
+      "key": "hs-worship",
+      "title": "Worship",
+      "department": "Worship",
+      "campus": "holly-springs",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "thomas-davis"
+      ]
+    },
+    {
+      "key": "hs-music-director",
+      "title": "Music Director",
+      "department": "Worship",
+      "campus": "holly-springs",
+      "reports_to": "hs-worship",
+      "holders": [
+        "roumar-bromfield"
+      ]
+    },
+    {
+      "key": "hs-students",
+      "title": "Students",
+      "department": "Students",
+      "campus": "holly-springs",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "zach-woodall",
+        "sarah-woodall"
+      ]
+    },
+    {
+      "key": "hs-students-intern",
+      "title": "Intern",
+      "department": "Students",
+      "campus": "holly-springs",
+      "reports_to": "hs-students",
+      "holders": [
+        "levi-porter"
+      ]
+    },
+    {
+      "key": "hs-kids",
+      "title": "Kids",
+      "department": "Kids",
+      "campus": "holly-springs",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "vannessa-smith"
+      ]
+    },
+    {
+      "key": "hs-kids-intern",
+      "title": "Intern",
+      "department": "Kids",
+      "campus": "holly-springs",
+      "reports_to": "hs-kids",
+      "holders": [
+        "anna"
+      ]
+    },
+    {
+      "key": "hs-production",
+      "title": "Production",
+      "department": "Production",
+      "campus": "holly-springs",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "john-booth",
+        "josh-floyd"
+      ]
+    },
+    {
+      "key": "hs-pastoral-care",
+      "title": "Pastoral Care",
+      "department": "Pastoral Care",
+      "campus": "holly-springs",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "brandon-ford"
+      ]
+    },
+    {
+      "key": "hs-administrative",
+      "title": "Administrative",
+      "department": "Administrative",
+      "campus": "holly-springs",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "shelby-koerner"
+      ]
+    },
+    {
+      "key": "hs-facilities",
+      "title": "Facilities",
+      "department": "Facilities",
+      "campus": "holly-springs",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "charlie-shultz"
+      ]
+    },
+    {
+      "key": "hs-small-groups",
+      "title": "Small Groups",
+      "department": "Small Groups",
+      "campus": "holly-springs",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "kathy-malloy"
+      ]
+    },
+    {
+      "key": "uh-campus-pastor",
+      "title": "Campus Pastor",
+      "department": "Leadership",
+      "campus": "union-hill",
+      "reports_to": "hs-executive-pastor",
+      "holders": [
+        "zach-woodall"
+      ],
+      "campus_lead": true,
+      "_note": "campus_lead: may assign tasks to anyone at this campus"
+    },
+    {
+      "key": "uh-campus-coordinator",
+      "title": "Campus Coordinator",
+      "department": "Leadership",
+      "campus": "union-hill",
+      "reports_to": "uh-campus-pastor",
+      "holders": []
+    },
+    {
+      "key": "uh-worship-director",
+      "title": "Worship Director",
+      "department": "Worship",
+      "campus": "union-hill",
+      "reports_to": "hs-worship",
+      "campus_oversight": "uh-campus-pastor",
+      "holders": []
+    },
+    {
+      "key": "uh-kids-director",
+      "title": "Kids Director",
+      "department": "Kids",
+      "campus": "union-hill",
+      "reports_to": "hs-kids",
+      "campus_oversight": "uh-campus-pastor",
+      "holders": []
+    },
+    {
+      "key": "uh-student-director",
+      "title": "Student Director",
+      "department": "Students",
+      "campus": "union-hill",
+      "reports_to": "hs-students",
+      "campus_oversight": "uh-campus-pastor",
+      "holders": []
+    },
+    {
+      "key": "uh-production-director",
+      "title": "Production Director",
+      "department": "Production",
+      "campus": "union-hill",
+      "reports_to": "hs-worship",
+      "campus_oversight": "uh-campus-pastor",
+      "holders": [
+        "john-booth"
+      ],
+      "_note": "reports to Thomas Davis (Worship), not Holly Springs Production"
+    },
+    {
+      "key": "uh-small-groups-director",
+      "title": "Small Groups Director",
+      "department": "Small Groups",
+      "campus": "union-hill",
+      "reports_to": "hs-small-groups",
+      "campus_oversight": "uh-campus-pastor",
+      "holders": []
+    },
+    {
+      "key": "uh-next-steps-director",
+      "title": "Next Steps Director",
+      "department": "Next Steps",
+      "campus": "union-hill",
+      "reports_to": null,
+      "campus_oversight": "uh-campus-pastor",
+      "holders": [],
+      "_note": "chart says REPORTS TO: Unassigned"
+    },
+    {
+      "key": "uh-facilities-director",
+      "title": "Facilities Director",
+      "department": "Facilities",
+      "campus": "union-hill",
+      "reports_to": "hs-executive-pastor",
+      "campus_oversight": "uh-campus-pastor",
+      "holders": [
+        "charlie-shultz"
+      ],
+      "_note": "reports to JB Kitts directly, not Holly Springs Facilities"
+    }
   ],
-
   "advisory": [
-    { "key": "elder-board", "name": "Elder Board", "relates_to": "hs-senior-pastor", "_note": "lateral to Senior Pastor on both charts; not a staff department" }
+    {
+      "key": "elder-board",
+      "name": "Elder Board",
+      "relates_to": "hs-senior-pastor",
+      "_note": "lateral to Senior Pastor on both charts; not a staff department"
+    }
   ]
 }

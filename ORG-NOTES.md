@@ -78,6 +78,12 @@ Worth knowing these aren't mistakes in the data — they're what the chart says:
 - **Elder Board** sits lateral to the Senior Pastor on both charts. Stored under
   `advisory` and left out of the staff tree for now, since it isn't a department
   and wouldn't hold tasks.
-- **Can the Campus Pastor assign tasks to Union Hill department directors?**
-  Strictly by the chart, no — they report to Holly Springs heads, and the
-  downward-only rule would block it. See the question in [PLAN.md](PLAN.md).
+**Resolved**
+
+- **Campus pastors may assign to anyone at their campus** (confirmed
+  2026-10-05), on top of the normal downward-only rule. Without this, the Union
+  Hill campus pastor couldn't assign to his own directors, since they report to
+  Holly Springs department heads. Implemented as a `campus_lead` flag on the
+  position; the rule is scoped to that campus, so it grants nothing at the other
+  campus and never reaches upward. Logic in [src/lib/org.ts](src/lib/org.ts),
+  covered by tests in `src/lib/org.test.ts`.
