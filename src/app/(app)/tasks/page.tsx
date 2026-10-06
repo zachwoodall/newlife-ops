@@ -90,7 +90,12 @@ export default async function TasksPage() {
             ) : (
               <ul className="border-border bg-surface mt-2 rounded-lg border px-4">
                 {list.map((t) => (
-                  <TaskRow key={t.id} task={t} />
+                  <TaskRow
+                    key={t.id}
+                    task={t}
+                    people={options}
+                    canDelete={t.created_by === me.id}
+                  />
                 ))}
               </ul>
             )}

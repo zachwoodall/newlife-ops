@@ -279,3 +279,91 @@ describe("data integrity", () => {
     await asAdmin();
   });
 });
+
+describe("editing and deleting", () => {
+  test("the creator may delete", async () => {
+    const zach = await idOf("zach-woodall");
+    await actAs("zach@newlifecanton.com");
+    const { rows } = await db.query<{ id: string }>(
+      `insert into tasks (title, owner_id, created_by) values ('Mine', $1, $1) returning id`,
+      [zach],
+    );
+    await db.query("delete from tasks where id = $1", [rows[0].id]);
+    const left = await db.query("select * from tasks");
+    await asAdmin();
+    assert.equal(left.rows.length, 0);
+  });
+
+  test("the owner may NOT delete a task someone else assigned them", async () => {
+    const zach = await idOf("zach-woodall");
+    const levi = await idOf("levi-porter");
+
+    await actAs("zach@newlifecanton.com");
+    const { rows } = await db.query<{ id: string }>(
+      `insert into tasks (title, owner_id, created_by)
+       values ('Assigned down', $1, $2) returning id`,
+      [levi, zach],
+    );
+
+    // Levi owns it but did not create it — the delete silently matches no rows.
+    await actAs("levi-porter@newlifecanton.com");
+    await db.query("delete from tasks where id = $1", [rows[0].id]);
+
+    await asAdmin();
+    const left = await db.query("select * from tasks");
+    assert.equal(left.rows.length, 1, "Levi should not have been able to delete it");
+  });
+
+  test("the owner may edit their own task", async () => {
+    const zach = await idOf("zach-woodall");
+    await actAs("zach@newlifecanton.com");
+    const { rows } = await db.query<{ id: string }>(
+      `insert into tasks (title, owner_id, created_by, cadence)
+       values ('Before', $1, $1, 'weekly') returning id`,
+      [zach],
+    );
+    await db.query(
+      "update tasks set title = 'After', cadence = 'quarterly' where id = $1",
+      [rows[0].id],
+    );
+    const { rows: after } = await db.query<{ title: string; cadence: string }>(
+      "select title, cadence from tasks where id = $1",
+      [rows[0].id],
+    );
+    await asAdmin();
+    assert.equal(after[0].title, "After");
+    assert.equal(after[0].cadence, "quarterly");
+  });
+
+  test("you may NOT hand a task to someone above you by editing it", async () => {
+    const zach = await idOf("zach-woodall");
+    const jb = await idOf("jb-kitts");
+    await actAs("zach@newlifecanton.com");
+    const { rows } = await db.query<{ id: string }>(
+      `insert into tasks (title, owner_id, created_by) values ('Mine', $1, $1) returning id`,
+      [zach],
+    );
+    await assert.rejects(
+      () => db.query("update tasks set owner_id = $1 where id = $2", [jb, rows[0].id]),
+      /policy/i,
+    );
+    await asAdmin();
+  });
+
+  test("reassigning downward is allowed", async () => {
+    const zach = await idOf("zach-woodall");
+    const levi = await idOf("levi-porter");
+    await actAs("zach@newlifecanton.com");
+    const { rows } = await db.query<{ id: string }>(
+      `insert into tasks (title, owner_id, created_by) values ('Handoff', $1, $1) returning id`,
+      [zach],
+    );
+    await db.query("update tasks set owner_id = $1 where id = $2", [levi, rows[0].id]);
+    await asAdmin();
+    const { rows: after } = await db.query<{ owner_id: string }>(
+      "select owner_id from tasks where id = $1",
+      [rows[0].id],
+    );
+    assert.equal(after[0].owner_id, levi);
+  });
+});
