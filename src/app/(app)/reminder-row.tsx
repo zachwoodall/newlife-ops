@@ -17,7 +17,7 @@ export function ReminderRow({ task }: { task: Task }) {
         />
       </form>
 
-      <Link href="/tasks" className="hover:text-brand-700 flex-1 text-sm">
+      <Link href={`/tasks/${task.id}`} className="hover:text-brand-700 flex-1 text-sm">
         {task.title}
       </Link>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useRef, useState } from "react";
 import {
   toggleTaskDone,
@@ -162,9 +163,16 @@ export function TaskRow({
         </button>
       </form>
 
-      <span className={done ? "text-muted flex-1 text-sm line-through" : "flex-1 text-sm"}>
+      <Link
+        href={`/tasks/${task.id}`}
+        className={
+          done
+            ? "text-muted hover:text-brand-700 flex-1 text-sm line-through"
+            : "hover:text-brand-700 flex-1 text-sm"
+        }
+      >
         {task.title}
-      </span>
+      </Link>
 
       <span
         className={

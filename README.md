@@ -58,7 +58,7 @@ browser; the rest are server-only and must stay that way.
 - [ ] **M5** — Editing the org chart
 - [x] **M6** — Task data and the Task Directory *(plus edit and delete)*
 - [x] **M7** — Home's top 5
-- [ ] **M8** — The project board
+- [~] **M8** — The project board *(built; migration 0004 pending for the checklist)*
 - [ ] **M9** — Recurrence, deadlines, and reminders
 - [ ] **M10** — Assign and message from the org chart
 - [ ] **M11** — Messages
