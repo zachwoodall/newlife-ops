@@ -57,7 +57,7 @@ browser; the rest are server-only and must stay that way.
 - [x] **M4** — The org chart (read-only)
 - [ ] **M5** — Editing the org chart
 - [x] **M6** — Task data and the Task Directory *(plus edit and delete)*
-- [ ] **M7** — Home's top 5
+- [x] **M7** — Home's top 5
 - [ ] **M8** — The project board
 - [ ] **M9** — Recurrence, deadlines, and reminders
 - [ ] **M10** — Assign and message from the org chart
