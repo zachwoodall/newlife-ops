@@ -56,7 +56,7 @@ browser; the rest are server-only and must stay that way.
 - [x] **M3b** — Campus switcher
 - [x] **M4** — The org chart (read-only)
 - [ ] **M5** — Editing the org chart
-- [ ] **M6** — Task data and the Task Directory
+- [~] **M6** — Task data and the Task Directory *(built and tested; migration 0003 not yet applied)*
 - [ ] **M7** — Home's top 5
 - [ ] **M8** — The project board
 - [ ] **M9** — Recurrence, deadlines, and reminders

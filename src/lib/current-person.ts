@@ -4,7 +4,7 @@ export type CurrentPerson = {
   email: string | null;
   /** Matched row from `people`, or null if the migration has not been run
    *  yet or no row carries this email. */
-  person: { key: string; full_name: string } | null;
+  person: { id: string; key: string; full_name: string } | null;
   /** False when the `people` table is not reachable — i.e. the migration
    *  has not been applied to this project yet. */
   dbReady: boolean;
@@ -20,7 +20,7 @@ export async function getCurrentPerson(): Promise<CurrentPerson | null> {
 
   const { data, error } = await supabase
     .from("people")
-    .select("key, full_name")
+    .select("id, key, full_name")
     .eq("email", user.email ?? "")
     .maybeSingle();
 
