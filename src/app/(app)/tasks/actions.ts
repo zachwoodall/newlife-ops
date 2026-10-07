@@ -21,22 +21,45 @@ export async function createTask(
   const ownerId = String(formData.get("owner_id") ?? "") || current.person.id;
 
   const supabase = await createClient();
-  const { error } = await supabase.from("tasks").insert({
-    title,
-    cadence,
-    due_date: dueRaw || null,
-    owner_id: ownerId,
-    created_by: current.person.id,
-  });
 
-  if (error) {
+  const blocked = (message: string) =>
+    message.includes("policy")
+      ? "You can't assign tasks to someone above you."
+      : message;
+
+  if (cadence === "once") {
+    const { error } = await supabase.from("tasks").insert({
+      title,
+      cadence,
+      due_date: dueRaw || null,
+      owner_id: ownerId,
+      created_by: current.person.id,
+    });
     // The downward-only rule is a database policy, so a blocked assignment
     // surfaces here rather than being silently dropped.
-    return {
-      error: error.message.includes("policy")
-        ? "You can't assign tasks to someone above you."
-        : error.message,
-    };
+    if (error) return { error: blocked(error.message) };
+  } else {
+    // A repeating job is a schedule that generates dated occurrences, so
+    // finishing this week's copy never disturbs next week's.
+    const { data: series, error: seriesError } = await supabase
+      .from("task_series")
+      .insert({
+        title,
+        cadence,
+        owner_id: ownerId,
+        created_by: current.person.id,
+        starts_on: dueRaw || new Date().toISOString().slice(0, 10),
+      })
+      .select("id")
+      .single();
+
+    if (seriesError) return { error: blocked(seriesError.message) };
+
+    const { error: genError } = await supabase.rpc("generate_occurrences", {
+      p_series: series.id,
+      p_horizon: 4,
+    });
+    if (genError) return { error: genError.message };
   }
 
   revalidatePath("/tasks");
@@ -128,4 +151,21 @@ export async function deleteTask(
   revalidatePath("/tasks");
   revalidatePath("/");
   return { ok: true };
+}
+
+/** Stop a repeating job and drop any occurrences still ahead of today. */
+export async function stopRepeating(formData: FormData) {
+  const seriesId = String(formData.get("series_id") ?? "");
+  const supabase = await createClient();
+
+  await supabase.from("task_series").update({ active: false }).eq("id", seriesId);
+  await supabase
+    .from("tasks")
+    .delete()
+    .eq("series_id", seriesId)
+    .eq("status", "open")
+    .gt("occurrence_date", new Date().toISOString().slice(0, 10));
+
+  revalidatePath("/tasks");
+  revalidatePath("/");
 }

@@ -55,11 +55,11 @@ browser; the rest are server-only and must stay that way.
 - [x] **M3** — Campuses, people, positions *(applied to the live project)*
 - [x] **M3b** — Campus switcher
 - [x] **M4** — The org chart (read-only)
-- [ ] **M5** — Editing the org chart
+- [~] **M5** — Editing the org chart *(built; migration 0006 pending)*
 - [x] **M6** — Task data and the Task Directory *(plus edit and delete)*
 - [x] **M7** — Home's top 5
-- [~] **M8** — The project board *(built; migration 0004 pending for the checklist)*
-- [ ] **M9** — Recurrence, deadlines, and reminders
+- [x] **M8** — The project board
+- [x] **M9** — Recurrence, deadlines, and in-app reminders
 - [ ] **M10** — Assign and message from the org chart
 - [ ] **M11** — Messages
 - [ ] **M12** — ImageKit media on tasks

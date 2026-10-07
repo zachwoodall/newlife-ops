@@ -13,6 +13,7 @@ import {
   removeChecklistItem,
   removeAssignee,
 } from "./actions";
+import { stopRepeating } from "../actions";
 import { NotesForm } from "./notes-form";
 import { TagForm } from "./tag-form";
 
@@ -70,7 +71,30 @@ export default async function BoardPage({
         </span>
         <span aria-hidden>·</span>
         <span>Owned by {ownerName}</span>
+        {task.series_id && (
+          <>
+            <span aria-hidden>·</span>
+            <span className="text-brand-700 dark:text-brand-300 font-medium">
+              Repeats {CADENCE_LABEL[task.cadence].toLowerCase()}
+            </span>
+          </>
+        )}
       </div>
+
+      {task.series_id && task.created_by === current.person.id && (
+        <form action={stopRepeating} className="mt-3">
+          <input type="hidden" name="series_id" value={task.series_id} />
+          <button
+            type="submit"
+            className="border-border text-muted rounded-md border px-3 py-1.5 text-xs font-medium hover:text-red-700 dark:hover:text-red-300"
+          >
+            Stop repeating
+          </button>
+          <span className="text-muted ml-2 text-xs">
+            Keeps this one and anything already done; removes future copies.
+          </span>
+        </form>
+      )}
 
       <section className="mt-8">
         <h2 className="text-sm font-semibold tracking-widest uppercase">Status</h2>

@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentPerson } from "@/lib/current-person";
+import { countDueSoon } from "@/lib/tasks-data";
 import { signOut } from "./actions";
 import { Nav } from "./nav";
 
@@ -12,6 +14,9 @@ export default async function AppLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  const current = await getCurrentPerson();
+  const dueSoon = current?.person ? await countDueSoon(current.person.id) : 0;
+
   return (
     <div className="flex min-h-full flex-col">
       <header className="border-border border-b">
@@ -21,7 +26,7 @@ export default async function AppLayout({
             <span className="font-semibold">Church Ops</span>
           </div>
 
-          <Nav />
+          <Nav dueSoon={dueSoon} />
 
           <form action={signOut} className="ml-auto flex items-center gap-3">
             <span className="text-muted hidden text-sm sm:inline">

@@ -9,7 +9,7 @@ const LINKS = [
   { href: "/tasks", label: "Task Directory" },
 ];
 
-export function Nav() {
+export function Nav({ dueSoon = 0 }: { dueSoon?: number }) {
   const pathname = usePathname();
 
   return (
@@ -29,6 +29,18 @@ export function Nav() {
             }
           >
             {link.label}
+            {link.href === "/" && dueSoon > 0 && (
+              <span
+                title={`${dueSoon} due today or overdue`}
+                className={
+                  active
+                    ? "ml-1.5 rounded-full bg-white/25 px-1.5 py-0.5 text-[11px] font-semibold"
+                    : "ml-1.5 rounded-full bg-red-600 px-1.5 py-0.5 text-[11px] font-semibold text-white"
+                }
+              >
+                {dueSoon}
+              </span>
+            )}
           </Link>
         );
       })}

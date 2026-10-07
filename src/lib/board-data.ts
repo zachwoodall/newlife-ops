@@ -29,7 +29,7 @@ export async function loadBoard(taskId: string): Promise<Board | null> {
 
   const { data: task, error } = await supabase
     .from("tasks")
-    .select("id, title, notes, owner_id, created_by, cadence, kind, status, due_date")
+    .select("id, title, notes, owner_id, created_by, cadence, kind, status, due_date, series_id, occurrence_date")
     .eq("id", taskId)
     .maybeSingle();
 

@@ -1,10 +1,12 @@
 import { getCurrentPerson } from "@/lib/current-person";
 import { loadOrg } from "@/lib/org-data";
 import { getSelectedCampus } from "@/lib/campus";
-import { positionsOf, directReports, campusesOf } from "@/lib/org";
+import { positionsOf, directReports, campusesOf, isBelow } from "@/lib/org";
 import { SetupNotice } from "../setup-notice";
 import { CampusSwitcher } from "./campus-switcher";
 import { PositionCard } from "./position-card";
+import { EditableCard, type CardPosition } from "./editable-card";
+import { AddRole } from "./add-role";
 
 export default async function DepartmentPage() {
   const current = await getCurrentPerson();
@@ -31,6 +33,26 @@ export default async function DepartmentPage() {
   const here = positionsOf(org, me).filter((p) => p.campus === selected);
   const campusName =
     org.campuses.find((c) => c.key === selected)?.name ?? selected;
+
+  const peopleById = new Map(org.people.map((p) => [p.key, p]));
+  const allPeople = org.people
+    .filter((p) => p.id)
+    .map((p) => ({ id: p.id!, name: p.full_name }));
+
+  /** Shape a position for the editable card, labelling off-campus roles. */
+  const toCard = (p: (typeof org.positions)[number]): CardPosition => ({
+    id: p.id!,
+    title: p.title,
+    department: p.department,
+    campusName:
+      p.campus === selected
+        ? null
+        : (org.campuses.find((c) => c.key === p.campus)?.name ?? null),
+    holders: p.holders
+      .map((k) => peopleById.get(k))
+      .filter(Boolean)
+      .map((person) => ({ id: person!.id!, name: person!.full_name })),
+  });
   const primaryCampusName =
     org.campuses.find((c) => c.is_primary)?.name ?? "the main campus";
 
@@ -59,6 +81,13 @@ export default async function DepartmentPage() {
           ? (org.positions.find((p) => p.key === position.reports_to) ?? null)
           : null;
         const reports = directReports(org, position.key);
+        const beneath = org.positions.filter(
+          (p) => p.id && p.key !== position.key && isBelow(org, p.key, position.key),
+        );
+        const moveTargets = [
+          { id: position.id!, label: `${position.title} (you)` },
+          ...beneath.map((p) => ({ id: p.id!, label: p.title })),
+        ];
         // A campus lead oversees everyone at their campus, including roles
         // whose reporting line runs to the other campus.
         const oversight = position.campus_lead
@@ -112,10 +141,25 @@ export default async function DepartmentPage() {
                 ) : (
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {reports.map((r) => (
-                      <PositionCard key={r.key} org={org} position={r} viewingCampus={selected} />
+                      <EditableCard
+                        key={r.key}
+                        position={toCard(r)}
+                        allPeople={allPeople}
+                        reportsToOptions={moveTargets}
+                        reportsToId={
+                          org.positions.find((p) => p.key === r.reports_to)?.id ?? null
+                        }
+                      />
                     ))}
                   </div>
                 )}
+                <div className="mt-3 max-w-xs">
+                  <AddRole
+                    parentId={position.id!}
+                    campusKey={position.campus}
+                    department={position.department}
+                  />
+                </div>
               </div>
 
               {position.campus_lead && (
@@ -135,11 +179,14 @@ export default async function DepartmentPage() {
                   ) : (
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       {oversight.map((r) => (
-                        <PositionCard
+                        <EditableCard
                           key={r.key}
-                          org={org}
-                          position={r}
-                          viewingCampus={selected}
+                          position={toCard(r)}
+                          allPeople={allPeople}
+                          reportsToOptions={moveTargets}
+                          reportsToId={
+                            org.positions.find((p) => p.key === r.reports_to)?.id ?? null
+                          }
                         />
                       ))}
                     </div>

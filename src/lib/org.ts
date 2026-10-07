@@ -16,10 +16,14 @@ export type Person = {
   key: string;
   full_name: string;
   email: string | null;
+  /** Database id. Absent when the data came from seed/org.json. */
+  id?: string;
 };
 
 export type Position = {
   key: string;
+  /** Database id. Absent when the data came from seed/org.json. */
+  id?: string;
   title: string;
   department: string;
   campus: string;

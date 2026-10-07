@@ -59,11 +59,13 @@ export async function loadOrg(): Promise<OrgData | null> {
       is_primary: Boolean(c.is_primary),
     })),
     people: (people.data as Row[]).map((p) => ({
+      id: p.id as string,
       key: p.key as string,
       full_name: p.full_name as string,
       email: (p.email as string) ?? null,
     })),
     positions: (positions.data as Row[]).map((p) => ({
+      id: p.id as string,
       key: p.key as string,
       title: p.title as string,
       department: p.department as string,

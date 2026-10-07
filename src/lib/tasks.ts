@@ -19,6 +19,8 @@ export type Task = {
   kind: "project" | "todo";
   status: "open" | "in_progress" | "done";
   due_date: string | null;
+  series_id?: string | null;
+  occurrence_date?: string | null;
 };
 
 /** Group tasks under each cadence heading, in display order. */
