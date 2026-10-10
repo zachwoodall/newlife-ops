@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/", label: "Home" },
   { href: "/department", label: "My Department" },
   { href: "/tasks", label: "Task Directory" },
+  { href: "/weekly", label: "This Week" },
   { href: "/messages", label: "Messages" },
 ];
 
