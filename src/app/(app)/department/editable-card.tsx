@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { AssignPanel } from "./assign-panel";
 import {
   updatePosition,
   deletePosition,
@@ -22,12 +23,15 @@ export function EditableCard({
   allPeople,
   reportsToOptions,
   reportsToId,
+  assignableIds,
 }: {
   position: CardPosition;
   allPeople: { id: string; name: string }[];
   /** Roles this person is allowed to move the card under. */
   reportsToOptions: { id: string; label: string }[];
   reportsToId: string | null;
+  /** People the viewer may assign work to. */
+  assignableIds: string[];
 }) {
   const [editing, setEditing] = useState(false);
   const [picked, setPicked] = useState("");
@@ -68,9 +72,16 @@ export function EditableCard({
           {open ? (
             <p className="text-muted text-sm italic">Open position</p>
           ) : (
-            <p className="text-sm font-medium">
-              {position.holders.map((h) => h.name).join(" & ")}
-            </p>
+            <div className="space-y-1">
+              {position.holders.map((h) => (
+                <AssignPanel
+                  key={h.id}
+                  personId={h.id}
+                  name={h.name}
+                  canAssign={assignableIds.includes(h.id)}
+                />
+              ))}
+            </div>
           )}
           <p className="text-muted mt-0.5 text-xs">
             {position.department}

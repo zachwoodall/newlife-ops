@@ -1,7 +1,13 @@
 import { getCurrentPerson } from "@/lib/current-person";
 import { loadOrg } from "@/lib/org-data";
 import { getSelectedCampus } from "@/lib/campus";
-import { positionsOf, directReports, campusesOf, isBelow } from "@/lib/org";
+import {
+  positionsOf,
+  directReports,
+  campusesOf,
+  isBelow,
+  assignableBy,
+} from "@/lib/org";
 import { SetupNotice } from "../setup-notice";
 import { CampusSwitcher } from "./campus-switcher";
 import { PositionCard } from "./position-card";
@@ -38,6 +44,11 @@ export default async function DepartmentPage() {
   const allPeople = org.people
     .filter((p) => p.id)
     .map((p) => ({ id: p.id!, name: p.full_name }));
+
+  // Same rule the database enforces: tasks only ever flow downward.
+  const assignableIds = assignableBy(org, me)
+    .map((p) => p.id)
+    .filter((id): id is string => Boolean(id));
 
   /** Shape a position for the editable card, labelling off-campus roles. */
   const toCard = (p: (typeof org.positions)[number]): CardPosition => ({
@@ -149,6 +160,7 @@ export default async function DepartmentPage() {
                         reportsToId={
                           org.positions.find((p) => p.key === r.reports_to)?.id ?? null
                         }
+                        assignableIds={assignableIds}
                       />
                     ))}
                   </div>
@@ -187,6 +199,7 @@ export default async function DepartmentPage() {
                           reportsToId={
                             org.positions.find((p) => p.key === r.reports_to)?.id ?? null
                           }
+                          assignableIds={assignableIds}
                         />
                       ))}
                     </div>
