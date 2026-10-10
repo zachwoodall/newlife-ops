@@ -12,9 +12,11 @@ import {
   toggleChecklistItem,
   removeChecklistItem,
   removeAssignee,
+  removeFile,
 } from "./actions";
 import { stopRepeating } from "../actions";
 import { NotesForm } from "./notes-form";
+import { FileUpload } from "./file-upload";
 import { TagForm } from "./tag-form";
 
 const STATUSES = [
@@ -36,7 +38,8 @@ export default async function BoardPage({
   const board = await loadBoard(id);
   if (!board) notFound();
 
-  const { task, ownerName, assignees, checklist, checklistReady } = board;
+  const { task, ownerName, assignees, checklist, checklistReady, files, filesReady } =
+    board;
   const canManage =
     task.owner_id === current.person.id || task.created_by === current.person.id;
 
@@ -266,10 +269,88 @@ export default async function BoardPage({
       </section>
 
       <section className="mt-8">
-        <h2 className="text-sm font-semibold tracking-widest uppercase">Files</h2>
-        <div className="border-border text-muted mt-2 rounded-lg border border-dashed p-8 text-center text-sm">
-          Document, image and video uploads arrive in Milestone 12.
-        </div>
+        <h2 className="text-sm font-semibold tracking-widest uppercase">
+          Files
+          {files.length > 0 && (
+            <span className="text-muted ml-2 font-normal">{files.length}</span>
+          )}
+        </h2>
+
+        {!filesReady ? (
+          <div className="border-brand-200 bg-brand-50 text-brand-900 mt-2 rounded-lg border p-4 text-sm dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
+            <p className="font-semibold">Files need one more migration</p>
+            <p className="mt-1">
+              Run{" "}
+              <code className="font-mono text-xs">
+                supabase/migrations/0008_task_files.sql
+              </code>{" "}
+              in the Supabase SQL Editor.
+            </p>
+          </div>
+        ) : (
+          <>
+            {files.length > 0 && (
+              <ul className="mt-2 grid gap-3 sm:grid-cols-2">
+                {files.map((f) => (
+                  <li
+                    key={f.id}
+                    className="border-border bg-surface overflow-hidden rounded-lg border"
+                  >
+                    {f.kind === "video" ? (
+                      <video
+                        src={f.url}
+                        controls
+                        preload="metadata"
+                        poster={f.thumbnail_url ?? undefined}
+                        className="aspect-video w-full bg-black"
+                      />
+                    ) : f.kind === "image" ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={f.thumbnail_url ?? f.url}
+                        alt={f.name}
+                        className="aspect-video w-full bg-neutral-100 object-cover dark:bg-neutral-800"
+                      />
+                    ) : null}
+
+                    <div className="flex items-start gap-2 px-3 py-2.5">
+                      <div className="min-w-0 flex-1">
+                        <a
+                          href={f.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-brand-700 block truncate text-sm font-medium"
+                        >
+                          {f.name}
+                        </a>
+                        <p className="text-muted mt-0.5 text-xs">
+                          {f.uploaderName}
+                          {f.size_bytes
+                            ? ` · ${Math.max(1, Math.round(f.size_bytes / 1024))} KB`
+                            : ""}
+                        </p>
+                      </div>
+                      <form action={removeFile}>
+                        <input type="hidden" name="task_id" value={task.id} />
+                        <input type="hidden" name="file_id" value={f.id} />
+                        <button
+                          type="submit"
+                          className="text-muted text-xs hover:text-red-700 dark:hover:text-red-300"
+                        >
+                          Remove
+                        </button>
+                      </form>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="mt-3">
+              <FileUpload taskId={task.id} />
+            </div>
+          </>
+        )}
       </section>
     </main>
   );

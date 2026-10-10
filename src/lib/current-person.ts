@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { firstName } from "@/lib/names";
 
 export type CurrentPerson = {
   email: string | null;
@@ -33,6 +34,6 @@ export async function getCurrentPerson(): Promise<CurrentPerson | null> {
 
 /** First name for greetings, falling back to the email local part. */
 export function displayName(current: CurrentPerson): string {
-  if (current.person) return current.person.full_name.split(" ")[0];
+  if (current.person) return firstName(current.person.full_name);
   return current.email?.split("@")[0] ?? "there";
 }

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentPerson } from "@/lib/current-person";
 
 const touch = (id: string) => {
   revalidatePath(`/tasks/${id}`);
@@ -105,4 +106,43 @@ export async function removeAssignee(formData: FormData) {
     .eq("task_id", id)
     .eq("person_id", personId);
   touch(id);
+}
+
+export type FileRecord = {
+  imagekit_file_id: string;
+  name: string;
+  url: string;
+  thumbnail_url: string | null;
+  kind: "image" | "video" | "document";
+  size_bytes: number | null;
+};
+
+/**
+ * Records a file that the browser has already pushed to ImageKit.
+ * RLS checks the uploader can see the task and is not attributing the
+ * upload to someone else.
+ */
+export async function recordFile(taskId: string, file: FileRecord) {
+  const current = await getCurrentPerson();
+  if (!current?.person) return { error: "Not signed in." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("task_files").insert({
+    task_id: taskId,
+    uploaded_by: current.person.id,
+    ...file,
+  });
+
+  if (error) return { error: error.message };
+  touch(taskId);
+  return { ok: true as const };
+}
+
+export async function removeFile(formData: FormData) {
+  const taskId = String(formData.get("task_id") ?? "");
+  const fileId = String(formData.get("file_id") ?? "");
+  const supabase = await createClient();
+  // Only the row goes; the bytes stay in ImageKit until cleaned up there.
+  await supabase.from("task_files").delete().eq("id", fileId);
+  touch(taskId);
 }

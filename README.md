@@ -61,8 +61,8 @@ browser; the rest are server-only and must stay that way.
 - [x] **M8** — The project board
 - [x] **M9** — Recurrence, deadlines, and in-app reminders
 - [x] **M10** — Assign from the org chart
-- [~] **M11** — Messages *(built; migration 0007 pending)*
-- [ ] **M12** — ImageKit media on tasks
+- [x] **M11** — Messages
+- [~] **M12** — ImageKit media on tasks *(built; needs migration 0008 and ImageKit keys)*
 - [ ] **M13** — The weekly to-do board
 
 ## Known advisories

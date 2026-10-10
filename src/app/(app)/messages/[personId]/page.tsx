@@ -5,6 +5,7 @@ import { loadThread, formatWhen } from "@/lib/messages-data";
 import { markThreadRead } from "../actions";
 import { createClient } from "@/lib/supabase/server";
 import { Compose } from "../compose";
+import { firstName } from "@/lib/names";
 
 export default async function ThreadPage({
   params,
@@ -69,7 +70,7 @@ export default async function ThreadPage({
       <div className="mt-6">
         <Compose
           recipientId={personId}
-          recipientName={(other.full_name as string).split(" ")[0]}
+          recipientName={firstName(other.full_name as string)}
         />
       </div>
     </main>
