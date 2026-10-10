@@ -62,7 +62,7 @@ browser; the rest are server-only and must stay that way.
 - [x] **M9** — Recurrence, deadlines, and in-app reminders
 - [x] **M10** — Assign from the org chart
 - [x] **M11** — Messages
-- [~] **M12** — ImageKit media on tasks *(built; needs ImageKit keys)*
+- [x] **M12** — ImageKit media on tasks
 - [x] **M13** — The weekly to-do board
 
 ## Known advisories

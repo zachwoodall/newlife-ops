@@ -335,6 +335,7 @@ export default async function BoardPage({
                         <input type="hidden" name="file_id" value={f.id} />
                         <button
                           type="submit"
+                          aria-label={`Remove ${f.name}`}
                           className="text-muted text-xs hover:text-red-700 dark:hover:text-red-300"
                         >
                           Remove
