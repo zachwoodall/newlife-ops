@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import { AssignPanel } from "./assign-panel";
 import {
   updatePosition,
@@ -74,12 +75,21 @@ export function EditableCard({
           ) : (
             <div className="space-y-1">
               {position.holders.map((h) => (
-                <AssignPanel
-                  key={h.id}
-                  personId={h.id}
-                  name={h.name}
-                  canAssign={assignableIds.includes(h.id)}
-                />
+                <div key={h.id} className="flex items-start gap-2">
+                  <div className="flex-1">
+                    <AssignPanel
+                      personId={h.id}
+                      name={h.name}
+                      canAssign={assignableIds.includes(h.id)}
+                    />
+                  </div>
+                  <Link
+                    href={`/messages/${h.id}`}
+                    className="text-muted hover:text-brand-700 shrink-0 text-[11px] font-medium"
+                  >
+                    Message
+                  </Link>
+                </div>
               ))}
             </div>
           )}

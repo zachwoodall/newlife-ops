@@ -60,8 +60,8 @@ browser; the rest are server-only and must stay that way.
 - [x] **M7** — Home's top 5
 - [x] **M8** — The project board
 - [x] **M9** — Recurrence, deadlines, and in-app reminders
-- [~] **M10** — Assign from the org chart *(messaging lands with M11)*
-- [ ] **M11** — Messages
+- [x] **M10** — Assign from the org chart
+- [~] **M11** — Messages *(built; migration 0007 pending)*
 - [ ] **M12** — ImageKit media on tasks
 - [ ] **M13** — The weekly to-do board
 

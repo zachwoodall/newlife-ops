@@ -7,9 +7,16 @@ const LINKS = [
   { href: "/", label: "Home" },
   { href: "/department", label: "My Department" },
   { href: "/tasks", label: "Task Directory" },
+  { href: "/messages", label: "Messages" },
 ];
 
-export function Nav({ dueSoon = 0 }: { dueSoon?: number }) {
+export function Nav({
+  dueSoon = 0,
+  unread = 0,
+}: {
+  dueSoon?: number;
+  unread?: number;
+}) {
   const pathname = usePathname();
 
   return (
@@ -29,6 +36,18 @@ export function Nav({ dueSoon = 0 }: { dueSoon?: number }) {
             }
           >
             {link.label}
+            {link.href === "/messages" && unread > 0 && (
+              <span
+                title={`${unread} unread`}
+                className={
+                  active
+                    ? "ml-1.5 rounded-full bg-white/25 px-1.5 py-0.5 text-[11px] font-semibold"
+                    : "ml-1.5 rounded-full bg-red-600 px-1.5 py-0.5 text-[11px] font-semibold text-white"
+                }
+              >
+                {unread}
+              </span>
+            )}
             {link.href === "/" && dueSoon > 0 && (
               <span
                 title={`${dueSoon} due today or overdue`}

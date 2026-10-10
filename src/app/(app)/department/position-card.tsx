@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { OrgData, Position } from "@/lib/org";
 
 export function PositionCard({
@@ -12,11 +13,11 @@ export function PositionCard({
   tone?: "normal" | "self" | "muted";
   viewingCampus?: string;
 }) {
-  const names = position.holders
-    .map((k) => org.people.find((p) => p.key === k)?.full_name)
-    .filter(Boolean) as string[];
+  const holders = position.holders
+    .map((k) => org.people.find((p) => p.key === k))
+    .filter(Boolean) as { id?: string; full_name: string }[];
 
-  const open = names.length === 0;
+  const open = holders.length === 0;
 
   const elsewhere =
     viewingCampus !== undefined && position.campus !== viewingCampus;
@@ -49,7 +50,21 @@ export function PositionCard({
         {open ? (
           <p className="text-muted text-sm italic">Open position</p>
         ) : (
-          <p className="text-sm font-medium">{names.join(" & ")}</p>
+          <div className="space-y-0.5">
+            {holders.map((h) => (
+              <p key={h.full_name} className="flex items-center gap-2 text-sm font-medium">
+                <span className="flex-1">{h.full_name}</span>
+                {h.id && (
+                  <Link
+                    href={`/messages/${h.id}`}
+                    className="text-muted hover:text-brand-700 text-[11px] font-medium"
+                  >
+                    Message
+                  </Link>
+                )}
+              </p>
+            ))}
+          </div>
         )}
         <p className="text-muted mt-0.5 text-xs">
           {position.department}
