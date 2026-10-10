@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentPerson } from "@/lib/current-person";
+import { deleteFromImageKit } from "@/lib/imagekit";
 
 const touch = (id: string) => {
   revalidatePath(`/tasks/${id}`);
@@ -142,7 +143,28 @@ export async function removeFile(formData: FormData) {
   const taskId = String(formData.get("task_id") ?? "");
   const fileId = String(formData.get("file_id") ?? "");
   const supabase = await createClient();
-  // Only the row goes; the bytes stay in ImageKit until cleaned up there.
-  await supabase.from("task_files").delete().eq("id", fileId);
+
+  // Delete the row first and ask for it back. RLS decides whether this person
+  // may remove it, so a returned row is proof the removal was allowed — only
+  // then do we touch the stored bytes. Doing it the other way round would let
+  // anyone who can guess a file id destroy an upload they cannot even see.
+  const { data: removed } = await supabase
+    .from("task_files")
+    .delete()
+    .eq("id", fileId)
+    .select("imagekit_file_id")
+    .maybeSingle();
+
+  if (removed?.imagekit_file_id) {
+    const result = await deleteFromImageKit(removed.imagekit_file_id);
+    // The row is already gone, so a storage failure only leaves an orphaned
+    // file in ImageKit. Worth knowing about, not worth failing the action.
+    if (!result.ok) {
+      console.warn(
+        `Removed file record ${fileId} but its ImageKit copy remains: ${result.reason}`,
+      );
+    }
+  }
+
   touch(taskId);
 }

@@ -1,7 +1,13 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
-import { signUpload, fileKind, thumbnailFor, GRANT_TTL_SECONDS } from "./imagekit.ts";
+import {
+  signUpload,
+  fileKind,
+  thumbnailFor,
+  basicAuthHeader,
+  GRANT_TTL_SECONDS,
+} from "./imagekit.ts";
 
 describe("signUpload", () => {
   test("matches an independently computed HMAC-SHA1", () => {
@@ -68,5 +74,19 @@ describe("thumbnailFor", () => {
 
   test("documents get none", () => {
     assert.equal(thumbnailFor("https://ik.imagekit.io/x/a.pdf", "document"), null);
+  });
+});
+
+describe("basicAuthHeader", () => {
+  test("encodes the private key as the username with an empty password", () => {
+    const header = basicAuthHeader("private_abc123");
+    assert.ok(header.startsWith("Basic "));
+    const decoded = Buffer.from(header.slice(6), "base64").toString();
+    assert.equal(decoded, "private_abc123:", "ImageKit wants key-colon, no password");
+  });
+
+  test("the key is not left in plain text in the header", () => {
+    const header = basicAuthHeader("private_SECRET");
+    assert.ok(!header.includes("private_SECRET"));
   });
 });
