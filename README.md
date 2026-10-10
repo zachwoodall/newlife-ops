@@ -63,7 +63,7 @@ browser; the rest are server-only and must stay that way.
 - [x] **M10** — Assign from the org chart
 - [x] **M11** — Messages
 - [~] **M12** — ImageKit media on tasks *(built; needs ImageKit keys)*
-- [~] **M13** — The weekly to-do board *(built; migration 0009 pending)*
+- [x] **M13** — The weekly to-do board
 
 ## Known advisories
 
