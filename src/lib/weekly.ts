@@ -57,8 +57,53 @@ export function isCheckedThisWeek(
   return checkedWeek === weekStart(at, timeZone);
 }
 
+/**
+ * The first of the month containing `at`, in church time. The monthly
+ * equivalent of weekStart, used by check-ins.
+ */
+export function monthStart(at: Date = new Date(), timeZone = CHURCH_TIMEZONE): string {
+  const { year, month } = localParts(at, timeZone);
+  return `${year}-${String(month).padStart(2, "0")}-01`;
+}
+
 /** Days until the board resets, for the hint under the heading. */
 export function daysUntilReset(at: Date = new Date(), timeZone = CHURCH_TIMEZONE): number {
   const { weekday } = localParts(at, timeZone);
   return 7 - weekday;
+}
+
+/**
+ * Recurring questions reuse this module's idea of a period.
+ *
+ * Like the weekly board, nothing is scheduled: an answer records which period
+ * it belongs to, and the page asks for the current one. A new week or month
+ * simply stops matching, so the question is open again and every past answer
+ * is kept rather than cleared.
+ */
+export type Cadence = "weekly" | "monthly";
+
+/** The period an answer given at `at` belongs to, as YYYY-MM-DD. */
+export function periodKey(
+  cadence: Cadence,
+  at: Date = new Date(),
+  timeZone = CHURCH_TIMEZONE,
+): string {
+  return cadence === "monthly" ? monthStart(at, timeZone) : weekStart(at, timeZone);
+}
+
+/** How the current period reads in a heading. */
+export function periodLabel(cadence: Cadence, period: string): string {
+  const d = new Date(`${period}T12:00:00Z`);
+  if (cadence === "monthly") {
+    return d.toLocaleDateString(undefined, {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    });
+  }
+  return `Week of ${d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  })}`;
 }
