@@ -13,7 +13,7 @@
 create table if not exists notifications (
   id          uuid primary key default gen_random_uuid(),
   person_id   uuid not null references people (id) on delete cascade,
-  kind        text not null check (kind in ('assigned', 'comment', 'message')),
+  kind        text not null check (kind in ('assigned', 'comment', 'message', 'announcement')),
   -- What it is about. Kept nullable so deleting the subject does not erase
   -- the fact that you were told.
   task_id     uuid references tasks (id) on delete cascade,

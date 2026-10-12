@@ -1,18 +1,20 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useRef } from "react";
 import { addComment, type CommentResult } from "./actions";
 
 export function CommentForm({ taskId }: { taskId: string }) {
-  const [state, action, pending] = useActionState<CommentResult | null, FormData>(
-    addComment,
-    null,
-  );
   const formRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (state && "ok" in state) formRef.current?.reset();
-  }, [state]);
+  // Reset inside the action rather than an effect: no render-then-correct flash.
+  const [state, action, pending] = useActionState<CommentResult | null, FormData>(
+    async (prev, formData) => {
+      const result = await addComment(prev, formData);
+      if ("ok" in result) formRef.current?.reset();
+      return result;
+    },
+    null,
+  );
 
   return (
     <form ref={formRef} action={action} className="mt-3">
