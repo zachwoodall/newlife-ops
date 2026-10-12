@@ -3,6 +3,13 @@
 Internal staff tool for managing departments, people, and week-to-week task
 ownership.
 
+**Live:** <https://newlife-ops.vercel.app>
+**Code:** <https://github.com/zachwoodall/newlife-ops> (private)
+
+Pushing to `main` deploys to production automatically. See
+[DEPLOYMENT.md](DEPLOYMENT.md) for environment variables and the manual
+deploy command.
+
 See [PLAN.md](PLAN.md) for the full milestone plan.
 
 **Stack:** Next.js 16 (App Router) + TypeScript + Tailwind v4 · Supabase (auth +
