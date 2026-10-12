@@ -9,14 +9,17 @@ const LINKS = [
   { href: "/tasks", label: "Task Directory" },
   { href: "/weekly", label: "This Week" },
   { href: "/messages", label: "Messages" },
+  { href: "/notifications", label: "Alerts" },
 ];
 
 export function Nav({
   dueSoon = 0,
   unread = 0,
+  alerts = 0,
 }: {
   dueSoon?: number;
   unread?: number;
+  alerts?: number;
 }) {
   const pathname = usePathname();
 
@@ -47,6 +50,18 @@ export function Nav({
                 }
               >
                 {unread}
+              </span>
+            )}
+            {link.href === "/notifications" && alerts > 0 && (
+              <span
+                title={`${alerts} unread`}
+                className={
+                  active
+                    ? "ml-1.5 rounded-full bg-white/25 px-1.5 py-0.5 text-[11px] font-semibold"
+                    : "ml-1.5 rounded-full bg-red-600 px-1.5 py-0.5 text-[11px] font-semibold text-white"
+                }
+              >
+                {alerts}
               </span>
             )}
             {link.href === "/" && dueSoon > 0 && (

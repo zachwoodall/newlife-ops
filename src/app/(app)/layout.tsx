@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentPerson } from "@/lib/current-person";
 import { countDueSoon } from "@/lib/tasks-data";
 import { countUnread } from "@/lib/messages-data";
+import { countUnreadNotifications } from "@/lib/notifications-data";
 import { signOut } from "./actions";
 import { Nav } from "./nav";
 
@@ -18,6 +19,7 @@ export default async function AppLayout({
   const current = await getCurrentPerson();
   const dueSoon = current?.person ? await countDueSoon(current.person.id) : 0;
   const unread = current?.person ? await countUnread(current.person.id) : 0;
+  const alerts = current?.person ? await countUnreadNotifications() : 0;
 
   return (
     <div className="flex min-h-full flex-col">
@@ -28,7 +30,7 @@ export default async function AppLayout({
             <span className="font-semibold">Church Ops</span>
           </div>
 
-          <Nav dueSoon={dueSoon} unread={unread} />
+          <Nav dueSoon={dueSoon} unread={unread} alerts={alerts} />
 
           <form action={signOut} className="ml-auto flex items-center gap-3">
             <span className="text-muted hidden text-sm sm:inline">
