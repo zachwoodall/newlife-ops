@@ -76,7 +76,7 @@ describe("being tagged on a task", () => {
     const notes = await notesFor("levi-porter");
     assert.equal(notes.length, 1);
     assert.equal(notes[0].kind, "assigned");
-    assert.match(notes[0].summary, /Zach Woodall tagged you on .*Sunday setlist/);
+    assert.match(notes[0].summary, /Zach Woodall tagged you on "Sunday setlist"/);
     assert.equal(notes[0].url, `/tasks/${id}`);
   });
 
@@ -102,7 +102,7 @@ describe("comments", () => {
 
     const notes = await notesFor("zach-woodall");
     assert.equal(notes.length, 1);
-    assert.match(notes[0].summary, /Levi Porter commented on .*Stage plot/);
+    assert.match(notes[0].summary, /Levi Porter commented on "Stage plot"/);
   });
 
   test("your own comment never notifies you", async () => {

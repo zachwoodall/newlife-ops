@@ -73,7 +73,7 @@ begin
       new.task_id,
       v_actor,
       coalesce((select full_name from people where id = v_actor), 'Someone')
-        || ' tagged you on “' || coalesce(v_title, 'a task') || '”',
+        || ' tagged you on "' || coalesce(v_title, 'a task') || '"',
       '/tasks/' || new.task_id
     );
   end if;
@@ -109,7 +109,7 @@ begin
     new.task_id,
     new.author_id,
     coalesce(v_actor_name, 'Someone')
-      || ' commented on “' || coalesce(v_title, 'a task') || '”',
+      || ' commented on "' || coalesce(v_title, 'a task') || '"',
     '/tasks/' || new.task_id
   from (
     select owner_id as id from tasks where id = new.task_id
