@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/tasks", label: "Task Directory" },
   { href: "/weekly", label: "This Week" },
   { href: "/calendar", label: "Calendar" },
+  { href: "/files", label: "Files" },
   { href: "/announcements", label: "Announcements" },
   { href: "/messages", label: "Messages" },
   { href: "/notifications", label: "Alerts" },
