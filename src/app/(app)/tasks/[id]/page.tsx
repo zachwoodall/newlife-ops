@@ -19,6 +19,7 @@ import { stopRepeating } from "../actions";
 import { NotesForm } from "./notes-form";
 import { FileUpload } from "./file-upload";
 import { CommentForm } from "./comment-form";
+import { Reactions } from "./reactions";
 import { TagForm } from "./tag-form";
 
 const STATUSES = [
@@ -331,6 +332,11 @@ export default async function BoardPage({
                       </form>
                     </div>
                     <p className="mt-1 text-sm whitespace-pre-wrap">{c.body}</p>
+                    <Reactions
+                      commentId={c.id}
+                      taskId={task.id}
+                      summary={c.reactions}
+                    />
                   </li>
                 ))}
               </ul>

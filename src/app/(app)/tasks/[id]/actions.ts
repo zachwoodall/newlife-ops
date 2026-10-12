@@ -201,3 +201,39 @@ export async function removeComment(formData: FormData) {
   await supabase.from("task_comments").delete().eq("id", commentId);
   touch(taskId);
 }
+
+/**
+ * Adds your reaction, or takes it back if it is already there.
+ * Deliberately creates no notification: a signal cheap enough not to interrupt.
+ */
+export async function toggleReaction(formData: FormData) {
+  const current = await getCurrentPerson();
+  if (!current?.person) return;
+
+  const taskId = String(formData.get("task_id") ?? "");
+  const commentId = String(formData.get("comment_id") ?? "");
+  const emoji = String(formData.get("emoji") ?? "");
+  if (!emoji) return;
+
+  const supabase = await createClient();
+
+  const { data: existing } = await supabase
+    .from("reactions")
+    .select("id")
+    .eq("person_id", current.person.id)
+    .eq("comment_id", commentId)
+    .eq("emoji", emoji)
+    .maybeSingle();
+
+  if (existing?.id) {
+    await supabase.from("reactions").delete().eq("id", existing.id);
+  } else {
+    await supabase.from("reactions").insert({
+      person_id: current.person.id,
+      comment_id: commentId,
+      emoji,
+    });
+  }
+
+  touch(taskId);
+}

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentPerson } from "@/lib/current-person";
 import type { Task } from "@/lib/tasks";
 
 export type ChecklistItem = {
@@ -39,7 +40,10 @@ export type Board = {
   assignees: Assignee[];
   checklist: ChecklistItem[];
   files: (TaskFile & { uploaderName: string })[];
-  comments: (TaskComment & { authorName: string })[];
+  comments: (TaskComment & {
+    authorName: string;
+    reactions: { emoji: string; count: number; mine: boolean; who: string }[];
+  })[];
   /** False when migration 0004 has not been applied to this project yet. */
   checklistReady: boolean;
   /** False when migration 0008 has not been applied yet. */
@@ -51,6 +55,8 @@ export type Board = {
 /** Everything behind one task. Returns null when it is missing or not yours. */
 export async function loadBoard(taskId: string): Promise<Board | null> {
   const supabase = await createClient();
+  // Needed to mark which reactions are the viewer's own.
+  const currentPersonId = (await getCurrentPerson())?.person?.id ?? "";
 
   const { data: task, error } = await supabase
     .from("tasks")
@@ -80,6 +86,15 @@ export async function loadBoard(taskId: string): Promise<Board | null> {
       .order("created_at", { ascending: true }),
   ]);
 
+  // Reactions hang off comments, so they need the comment ids first.
+  const commentIds = ((commentsRes.data ?? []) as TaskComment[]).map((c) => c.id);
+  const reactionsRes = commentIds.length
+    ? await supabase
+        .from("reactions")
+        .select("emoji, person_id, comment_id")
+        .in("comment_id", commentIds)
+    : { data: [], error: null };
+
   const nameById = new Map(
     (peopleRes.data ?? []).map((p) => [p.id as string, p.full_name as string]),
   );
@@ -97,10 +112,33 @@ export async function loadBoard(taskId: string): Promise<Board | null> {
       ...f,
       uploaderName: nameById.get(f.uploaded_by ?? "") ?? "Someone",
     })),
-    comments: ((commentsRes.data ?? []) as TaskComment[]).map((c) => ({
-      ...c,
-      authorName: nameById.get(c.author_id ?? "") ?? "Someone",
-    })),
+    comments: ((commentsRes.data ?? []) as TaskComment[]).map((c) => {
+      const mineAndTheirs = ((reactionsRes.data ?? []) as {
+        emoji: string;
+        person_id: string;
+        comment_id: string;
+      }[]).filter((r) => r.comment_id === c.id);
+
+      const byEmoji = new Map<string, string[]>();
+      for (const r of mineAndTheirs) {
+        const list = byEmoji.get(r.emoji) ?? [];
+        list.push(nameById.get(r.person_id) ?? "Someone");
+        byEmoji.set(r.emoji, list);
+      }
+
+      return {
+        ...c,
+        authorName: nameById.get(c.author_id ?? "") ?? "Someone",
+        reactions: [...byEmoji.entries()].map(([emoji, names]) => ({
+          emoji,
+          count: names.length,
+          mine: mineAndTheirs.some(
+            (r) => r.emoji === emoji && r.person_id === currentPersonId,
+          ),
+          who: names.join(", "),
+        })),
+      };
+    }),
     checklistReady: !checklistRes.error,
     filesReady: !filesRes.error,
     commentsReady: !commentsRes.error,
