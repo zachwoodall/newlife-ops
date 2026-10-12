@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
+import Link from "next/link";
 import { createTask, type CreateTaskResult } from "./actions";
 import { CADENCES, CADENCE_LABEL } from "@/lib/tasks";
 
@@ -28,15 +29,35 @@ export function NewTaskForm({
     null,
   );
 
+  const justAdded = state && "ok" in state && state.taskId ? state : null;
+
   if (!open) {
     return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="bg-brand-500 hover:bg-brand-600 rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
-      >
-        New task
-      </button>
+      <div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="bg-brand-500 hover:bg-brand-600 rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
+        >
+          New task
+        </button>
+
+        {/* A new task is only a title until someone opens its board, which is
+            where files, the checklist and helpers live. Nothing else on this
+            page says that board exists. */}
+        {justAdded && (
+          <p className="text-muted mt-2 text-sm">
+            Added “{justAdded.title}”.{" "}
+            <Link
+              href={`/tasks/${justAdded.taskId}`}
+              className="text-brand-700 font-medium hover:underline dark:text-brand-300"
+            >
+              Open its board
+            </Link>{" "}
+            to add files, a checklist, or helpers.
+          </p>
+        )}
+      </div>
     );
   }
 

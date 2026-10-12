@@ -165,13 +165,28 @@ export function TaskRow({
 
       <Link
         href={`/tasks/${task.id}`}
+        aria-label={`Open the board for "${task.title}"`}
         className={
           done
-            ? "text-muted hover:text-brand-700 flex-1 text-sm line-through"
-            : "hover:text-brand-700 flex-1 text-sm"
+            ? "text-muted hover:text-brand-700 flex flex-1 items-center gap-1.5 text-sm font-medium hover:underline"
+            : "hover:text-brand-700 flex flex-1 items-center gap-1.5 text-sm font-medium hover:underline"
         }
       >
-        {task.title}
+        <span className={done ? "line-through" : undefined}>{task.title}</span>
+        <svg
+          viewBox="0 0 16 16"
+          className="text-muted size-3.5 shrink-0 transition-transform group-hover:translate-x-0.5"
+          fill="none"
+          aria-hidden
+        >
+          <path
+            d="M6 3.5l5 4.5-5 4.5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </Link>
 
       <span

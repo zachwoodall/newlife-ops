@@ -4,7 +4,9 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentPerson } from "@/lib/current-person";
 
-export type CreateTaskResult = { error: string } | { ok: true };
+export type CreateTaskResult =
+  | { error: string }
+  | { ok: true; taskId?: string; title?: string };
 
 export async function createTask(
   _prev: CreateTaskResult | null,
@@ -28,16 +30,26 @@ export async function createTask(
       : message;
 
   if (cadence === "once") {
-    const { error } = await supabase.from("tasks").insert({
-      title,
-      cadence,
-      due_date: dueRaw || null,
-      owner_id: ownerId,
-      created_by: current.person.id,
-    });
+    const { data: created, error } = await supabase
+      .from("tasks")
+      .insert({
+        title,
+        cadence,
+        due_date: dueRaw || null,
+        owner_id: ownerId,
+        created_by: current.person.id,
+      })
+      .select("id")
+      .maybeSingle();
     // The downward-only rule is a database policy, so a blocked assignment
     // surfaces here rather than being silently dropped.
     if (error) return { error: blocked(error.message) };
+
+    revalidatePath("/tasks");
+    revalidatePath("/");
+    // Hand back the id so the form can offer a way through to the board,
+    // where files, the checklist and helpers live.
+    return { ok: true, taskId: created?.id, title };
   } else {
     // A repeating job is a schedule that generates dated occurrences, so
     // finishing this week's copy never disturbs next week's.
@@ -60,11 +72,22 @@ export async function createTask(
       p_horizon: 4,
     });
     if (genError) return { error: genError.message };
-  }
 
-  revalidatePath("/tasks");
-  revalidatePath("/");
-  return { ok: true };
+    revalidatePath("/tasks");
+    revalidatePath("/");
+
+    // A repeating task has one board per occurrence. Point at the soonest,
+    // which is the one the person is about to work on.
+    const { data: first } = await supabase
+      .from("tasks")
+      .select("id")
+      .eq("series_id", series.id)
+      .order("occurrence_date", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    return { ok: true, taskId: first?.id, title };
+  }
 }
 
 export async function toggleTaskDone(formData: FormData) {
