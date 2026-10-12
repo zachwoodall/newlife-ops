@@ -76,6 +76,43 @@ exactly why the service role key must never be given that prefix.
   morning locally rather than Saturday evening. If the church is not Eastern,
   change `CHURCH_TIMEZONE` there.
 
+## Branches and previews
+
+Vercel is connected to the GitHub repository, so deployment follows git:
+
+| You push to | Vercel builds | Who can see it |
+| --- | --- | --- |
+| `main` | Production, at the live URL | Anyone with the link (then the app's own login) |
+| any other branch | A preview, at its own URL | Only people signed in to the Vercel account |
+
+Preview builds get their own copy of the same four environment variables, so a
+branch deploys and runs exactly like production.
+
+### Previews share the live database
+
+There is one Supabase project, so a preview is a separate *copy of the app*
+pointed at the *same data*. Signing in to a preview and deleting a task deletes
+the real task. Previews are safe for trying out interface and behaviour changes;
+they are not a sandbox for experimenting with data.
+
+Giving previews their own data would mean a second Supabase project with the
+schema applied and its own seed, and pointing the preview environment variables
+at it. Worth doing if branches ever get used for anything riskier than UI work.
+
+### Working on a branch
+
+```
+git checkout -b some-change
+# ...edit, commit...
+git push -u origin some-change
+```
+
+Vercel comments the preview URL on the pull request, or it can be found with
+`npx vercel ls`. Merging the branch into `main` deploys it to production.
+
+To undo a bad production deploy, roll back to the previous one in the Vercel
+dashboard rather than pushing a hurried fix.
+
 ## Who can reach it
 
 The deployment is public in the sense that anyone with the URL sees the login
