@@ -168,3 +168,36 @@ export async function removeFile(formData: FormData) {
 
   touch(taskId);
 }
+
+export type CommentResult = { error: string } | { ok: true };
+
+export async function addComment(
+  _prev: CommentResult | null,
+  formData: FormData,
+): Promise<CommentResult> {
+  const current = await getCurrentPerson();
+  if (!current?.person) return { error: "Not signed in." };
+
+  const taskId = String(formData.get("task_id") ?? "");
+  const body = String(formData.get("body") ?? "").trim();
+  if (!body) return { error: "Write something first." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("task_comments").insert({
+    task_id: taskId,
+    author_id: current.person.id,
+    body,
+  });
+
+  if (error) return { error: error.message };
+  touch(taskId);
+  return { ok: true };
+}
+
+export async function removeComment(formData: FormData) {
+  const taskId = String(formData.get("task_id") ?? "");
+  const commentId = String(formData.get("comment_id") ?? "");
+  const supabase = await createClient();
+  await supabase.from("task_comments").delete().eq("id", commentId);
+  touch(taskId);
+}

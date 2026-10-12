@@ -25,16 +25,27 @@ export type TaskFile = {
   created_at: string;
 };
 
+export type TaskComment = {
+  id: string;
+  body: string;
+  author_id: string | null;
+  created_at: string;
+  edited_at: string | null;
+};
+
 export type Board = {
   task: Task;
   ownerName: string;
   assignees: Assignee[];
   checklist: ChecklistItem[];
   files: (TaskFile & { uploaderName: string })[];
+  comments: (TaskComment & { authorName: string })[];
   /** False when migration 0004 has not been applied to this project yet. */
   checklistReady: boolean;
   /** False when migration 0008 has not been applied yet. */
   filesReady: boolean;
+  /** False when migration 0010 has not been applied yet. */
+  commentsReady: boolean;
 };
 
 /** Everything behind one task. Returns null when it is missing or not yours. */
@@ -49,7 +60,7 @@ export async function loadBoard(taskId: string): Promise<Board | null> {
 
   if (error || !task) return null;
 
-  const [peopleRes, assigneeRes, checklistRes, filesRes] = await Promise.all([
+  const [peopleRes, assigneeRes, checklistRes, filesRes, commentsRes] = await Promise.all([
     supabase.from("people").select("id, full_name"),
     supabase.from("task_assignees").select("person_id, role_label").eq("task_id", taskId),
     supabase
@@ -60,6 +71,11 @@ export async function loadBoard(taskId: string): Promise<Board | null> {
     supabase
       .from("task_files")
       .select("id, name, url, thumbnail_url, kind, size_bytes, uploaded_by, created_at")
+      .eq("task_id", taskId)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("task_comments")
+      .select("id, body, author_id, created_at, edited_at")
       .eq("task_id", taskId)
       .order("created_at", { ascending: true }),
   ]);
@@ -81,7 +97,12 @@ export async function loadBoard(taskId: string): Promise<Board | null> {
       ...f,
       uploaderName: nameById.get(f.uploaded_by ?? "") ?? "Someone",
     })),
+    comments: ((commentsRes.data ?? []) as TaskComment[]).map((c) => ({
+      ...c,
+      authorName: nameById.get(c.author_id ?? "") ?? "Someone",
+    })),
     checklistReady: !checklistRes.error,
     filesReady: !filesRes.error,
+    commentsReady: !commentsRes.error,
   };
 }

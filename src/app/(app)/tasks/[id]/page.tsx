@@ -13,10 +13,12 @@ import {
   removeChecklistItem,
   removeAssignee,
   removeFile,
+  removeComment,
 } from "./actions";
 import { stopRepeating } from "../actions";
 import { NotesForm } from "./notes-form";
 import { FileUpload } from "./file-upload";
+import { CommentForm } from "./comment-form";
 import { TagForm } from "./tag-form";
 
 const STATUSES = [
@@ -38,8 +40,17 @@ export default async function BoardPage({
   const board = await loadBoard(id);
   if (!board) notFound();
 
-  const { task, ownerName, assignees, checklist, checklistReady, files, filesReady } =
-    board;
+  const {
+    task,
+    ownerName,
+    assignees,
+    checklist,
+    checklistReady,
+    files,
+    filesReady,
+    comments,
+    commentsReady,
+  } = board;
   const canManage =
     task.owner_id === current.person.id || task.created_by === current.person.id;
 
@@ -265,6 +276,73 @@ export default async function BoardPage({
           <div className="mt-4">
             <TagForm taskId={task.id} people={taggable} />
           </div>
+        )}
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-sm font-semibold tracking-widest uppercase">
+          Discussion
+          {comments.length > 0 && (
+            <span className="text-muted ml-2 font-normal">{comments.length}</span>
+          )}
+        </h2>
+
+        {!commentsReady ? (
+          <div className="border-brand-200 bg-brand-50 text-brand-900 mt-2 rounded-lg border p-4 text-sm dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
+            <p className="font-semibold">Discussion needs one more migration</p>
+            <p className="mt-1">
+              Run{" "}
+              <code className="font-mono text-xs">
+                supabase/migrations/0010_task_comments.sql
+              </code>{" "}
+              in the Supabase SQL Editor.
+            </p>
+          </div>
+        ) : (
+          <>
+            {comments.length > 0 ? (
+              <ul className="mt-2 space-y-2.5">
+                {comments.map((c) => (
+                  <li
+                    key={c.id}
+                    className="border-border bg-surface group rounded-lg border px-3 py-2.5"
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-sm font-medium">{c.authorName}</span>
+                      <span className="text-muted text-xs">
+                        {new Date(c.created_at).toLocaleString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "2-digit",
+                        })}
+                        {c.edited_at && " · edited"}
+                      </span>
+                      <form action={removeComment} className="ml-auto">
+                        <input type="hidden" name="task_id" value={task.id} />
+                        <input type="hidden" name="comment_id" value={c.id} />
+                        <button
+                          type="submit"
+                          aria-label={`Delete ${c.authorName}'s comment`}
+                          className="text-muted text-xs opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100 hover:text-red-700 dark:hover:text-red-300"
+                        >
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                    <p className="mt-1 text-sm whitespace-pre-wrap">{c.body}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-muted mt-2 text-sm">
+                No discussion yet. Questions and decisions about this task belong
+                here, so they stay with the work.
+              </p>
+            )}
+
+            <CommentForm taskId={task.id} />
+          </>
         )}
       </section>
 
