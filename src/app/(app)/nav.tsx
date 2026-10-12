@@ -12,6 +12,7 @@ const LINKS = [
   { href: "/announcements", label: "Announcements" },
   { href: "/messages", label: "Messages" },
   { href: "/notifications", label: "Alerts" },
+  { href: "/search", label: "Search" },
 ];
 
 export function Nav({
