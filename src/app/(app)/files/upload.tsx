@@ -6,7 +6,13 @@ import { fileKind, thumbnailFor } from "@/lib/imagekit";
 
 const UPLOAD_URL = "https://upload.imagekit.io/api/v1/files/upload";
 
-export function LibraryUpload({ departments }: { departments: string[] }) {
+export function LibraryUpload({
+  departments,
+  folderId = null,
+}: {
+  departments: string[];
+  folderId?: string | null;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +63,7 @@ export function LibraryUpload({ departments }: { departments: string[] }) {
         kind,
         size_bytes: typeof uploaded.size === "number" ? uploaded.size : file.size,
         department: department || null,
+        folder_id: folderId,
       });
 
       if ("error" in result) throw new Error(result.error);
