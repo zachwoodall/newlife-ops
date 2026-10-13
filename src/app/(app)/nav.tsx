@@ -15,6 +15,7 @@ const LINKS = [
   { href: "/messages", label: "Messages" },
   { href: "/notifications", label: "Alerts" },
   { href: "/search", label: "Search" },
+  { href: "/admin", label: "Staff" },
 ];
 
 export function Nav({
