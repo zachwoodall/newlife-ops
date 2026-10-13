@@ -76,10 +76,10 @@ export function buildCalendar(
   const lines: string[] = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Church Ops//Tasks//EN",
+    "PRODID:-//Church Management//Tasks//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "X-WR-CALNAME:Church Ops",
+    "X-WR-CALNAME:Church Management",
     // Ask clients not to hammer the feed.
     "REFRESH-INTERVAL;VALUE=DURATION:PT1H",
     "X-PUBLISHED-TTL:PT1H",

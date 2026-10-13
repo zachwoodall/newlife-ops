@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Church Ops",
+  title: "Church Management",
   description: "Staff, teams, and weekly assignments.",
 };
 

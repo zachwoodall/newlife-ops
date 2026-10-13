@@ -4,7 +4,8 @@ import { countDueSoon } from "@/lib/tasks-data";
 import { countUnread } from "@/lib/messages-data";
 import { countUnreadNotifications } from "@/lib/notifications-data";
 import { signOut } from "./actions";
-import { Nav } from "./nav";
+import { Nav, SectionTabs } from "./nav";
+import { AccountMenu } from "./account-menu";
 
 export default async function AppLayout({
   children,
@@ -27,24 +28,21 @@ export default async function AppLayout({
         <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center gap-x-6 gap-y-3 px-6 py-3">
           <div className="flex items-center gap-2">
             <div className="bg-brand-500 size-6 rounded" aria-hidden />
-            <span className="font-semibold">Church Ops</span>
+            <span className="font-semibold">Church Management</span>
           </div>
 
-          <Nav dueSoon={dueSoon} unread={unread} alerts={alerts} />
+          <Nav dueSoon={dueSoon} />
 
-          <form action={signOut} className="ml-auto flex items-center gap-3">
-            <span className="text-muted hidden text-sm sm:inline">
-              {user?.email}
-            </span>
-            <button
-              type="submit"
-              className="border-border hover:bg-brand-50 hover:text-brand-700 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors dark:hover:bg-neutral-800"
-            >
-              Sign out
-            </button>
-          </form>
+          <AccountMenu
+            email={user?.email ?? ""}
+            alerts={alerts}
+            unread={unread}
+            signOut={signOut}
+          />
         </div>
       </header>
+
+      <SectionTabs />
 
       {children}
     </div>

@@ -36,7 +36,7 @@ export default function LoginPage() {
     <main className="flex flex-1 items-center justify-center px-6 py-16">
       <div className="w-full max-w-sm">
         <div className="bg-brand-500 mb-6 size-10 rounded" aria-hidden />
-        <h1 className="text-2xl font-semibold tracking-tight">Church Ops</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Church Management</h1>
         <p className="text-muted mt-1 text-sm">
           Sign in to manage your department and tasks.
         </p>

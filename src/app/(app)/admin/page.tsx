@@ -64,7 +64,7 @@ export default async function AdminPage() {
     <main className="mx-auto max-w-2xl px-6 py-10">
       <h1 className="text-2xl font-semibold tracking-tight">Staff access</h1>
       <p className="text-muted mt-1 text-sm">
-        Who can sign in to Church Ops. {withAccess} of {people.length} have an
+        Who can sign in to Church Management. {withAccess} of {people.length} have an
         account.
       </p>
 

@@ -47,7 +47,7 @@ describe("subjectFor", () => {
 
   test("several are summarised rather than listed", () => {
     const r = recipient({ notifications: [note(), note({ id: "n2" }), note({ id: "n3" })] });
-    assert.equal(subjectFor(r), "3 updates in Church Ops");
+    assert.equal(subjectFor(r), "3 updates in Church Management");
   });
 });
 

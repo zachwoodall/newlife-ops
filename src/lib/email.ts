@@ -34,7 +34,7 @@ export function escapeHtml(value: string): string {
 export function subjectFor(r: Recipient): string {
   const n = r.notifications.length;
   if (n === 1) return r.notifications[0].summary;
-  return `${n} updates in Church Ops`;
+  return `${n} updates in Church Management`;
 }
 
 /**
@@ -47,7 +47,7 @@ export function textBody(r: Recipient, baseUrl: string): string {
     lines.push(`- ${n.summary}`);
     lines.push(`  ${baseUrl}${n.url}`);
   }
-  lines.push("", `Open Church Ops: ${baseUrl}`);
+  lines.push("", `Open Church Management: ${baseUrl}`);
   return lines.join("\n");
 }
 
@@ -65,7 +65,7 @@ export function htmlBody(r: Recipient, baseUrl: string): string {
     `<p>Hello ${escapeHtml(r.name)},</p>`,
     `<ul style="padding-left:18px">${items}</ul>`,
     `<p style="color:#737373;font-size:13px">`,
-    `<a href="${escapeHtml(baseUrl)}" style="color:#1d4ed8">Open Church Ops</a>`,
+    `<a href="${escapeHtml(baseUrl)}" style="color:#1d4ed8">Open Church Management</a>`,
     `</p></div>`,
   ].join("");
 }
