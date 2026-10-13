@@ -1,7 +1,24 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/auth"];
+/**
+ * Paths that must work without a session.
+ *
+ * The two API routes here are not unprotected -- they carry their own
+ * credential and would be useless behind a redirect:
+ *   /api/calendar        a subscription feed; calendar apps cannot sign in,
+ *                        so the token in the URL is the credential.
+ *   /api/notifications   the scheduled email sender; authenticated by the
+ *                        cron secret in its Authorization header.
+ *
+ * Everything else, including /api/imagekit/auth, still requires a session.
+ */
+const PUBLIC_PATHS = [
+  "/login",
+  "/auth",
+  "/api/calendar",
+  "/api/notifications",
+];
 
 /**
  * Refreshes the Supabase session on every request and guards every page.
