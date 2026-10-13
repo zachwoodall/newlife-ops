@@ -24,6 +24,9 @@ before(async () => {
   await db.exec(`create role anon; create role authenticated;
                  grant usage on schema public to anon, authenticated;`);
   await db.exec(readFileSync("supabase/migrations/0001_org_structure.sql", "utf8"));
+  // Supabase provides auth.users; PGlite does not, so stand in for it.
+  await db.exec(`create schema if not exists auth;
+                 create table if not exists auth.users (id uuid primary key, email text);`);
   await db.exec(readFileSync("supabase/seed.sql", "utf8"));
   await db.exec(`grant select on all tables in schema public to anon, authenticated;`);
   for (const m of ["0002_rls", "0003_tasks", "0004_task_board", "0005_recurrence",

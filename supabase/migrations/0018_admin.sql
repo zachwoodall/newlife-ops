@@ -14,8 +14,21 @@
 alter table people
   add column if not exists is_admin boolean not null default false;
 
--- Whoever is already signed in and linked becomes the first administrator;
--- without this nobody could grant it to anyone.
+-- Link people to their logins by email first.
+--
+-- The app identifies the signed-in person by matching their email, so
+-- auth_user_id was never being populated -- which meant the promotion below
+-- found nobody and left the app with no administrator at all. Backfilling
+-- here makes this migration self-healing rather than dependent on a column
+-- that nothing had been setting.
+update people p
+   set auth_user_id = u.id
+  from auth.users u
+ where p.email = u.email
+   and p.auth_user_id is null;
+
+-- Whoever is already signed in becomes the first administrator; without this
+-- nobody could grant it to anyone.
 update people
    set is_admin = true
  where auth_user_id is not null
