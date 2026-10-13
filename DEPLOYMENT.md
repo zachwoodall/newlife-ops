@@ -88,16 +88,30 @@ Vercel is connected to the GitHub repository, so deployment follows git:
 Preview builds get their own copy of the same four environment variables, so a
 branch deploys and runs exactly like production.
 
-### Previews share the live database
+### Previews have their own database
 
-There is one Supabase project, so a preview is a separate *copy of the app*
-pointed at the *same data*. Signing in to a preview and deleting a task deletes
-the real task. Previews are safe for trying out interface and behaviour changes;
-they are not a sandbox for experimenting with data.
+There are two Supabase projects:
 
-Giving previews their own data would mean a second Supabase project with the
-schema applied and its own seed, and pointing the preview environment variables
-at it. Worth doing if branches ever get used for anything riskier than UI work.
+| Project | Ref | Used by |
+| --- | --- | --- |
+| New Life Church Database | `ibfakkzktnxxtutlimni` | Production |
+| newlife-ops-preview | `dhpjchtgkmauwqbhvzjz` | Every preview deployment |
+
+The preview project has the same schema and the same seeded org chart, and no
+real work in it. A branch can therefore delete every task in a preview without
+touching anything real.
+
+Two things to know:
+
+**New migrations have to be applied twice** -- once to each project -- or a
+preview will fail against a schema the branch expects. The preview project was
+set up by applying every migration in `supabase/migrations/` in order,
+followed by `supabase/seed.sql`.
+
+**ImageKit is still shared.** Both projects upload to the same ImageKit
+account, since storage is not the thing previews were risking. A preview can
+only delete files its own database has rows for, which is why this is
+tolerable rather than ideal.
 
 ### Working on a branch
 
