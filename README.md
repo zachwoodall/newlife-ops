@@ -72,6 +72,11 @@ browser; the rest are server-only and must stay that way.
 - [x] **M12** — ImageKit media on tasks
 - [x] **M13** — The weekly to-do board
 
+## Planned
+
+- [Staff profiles](docs/PROFILES.md) — personality and working-style
+  profiles for each person. Captured, not started.
+
 ## Known advisories
 
 `npm audit` reports 5 high-severity issues, all from a single transitive
